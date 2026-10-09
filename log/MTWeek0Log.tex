@@ -1,0 +1,254 @@
+% \documentclass[12pt,a4paper]{article}
+
+% \setlength{\topmargin}{0.0in}
+% \setlength{\oddsidemargin}{0.33in}
+% \setlength{\textheight}{9.0in}
+% \setlength{\textwidth}{6.0in}
+% \renewcommand{\baselinestretch}{1.25}
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+% % Make all sections Plum
+% \usepackage[dvipsnames]{xcolor}
+% \usepackage{titlesec}
+% % This automatically colors all section titles Plum
+% \titleformat{\section}
+%   {\color{Plum}\normalfont\Large\bfseries}{\thesection}{1em}{}
+% \titleformat{\subsection}
+%   {\color{Plum}\normalfont\Large\bfseries}{\thesubsection}{1em}{}
+% % Shortcut for standard Orchid
+% \newcommand{\spring}[1]{\textcolor{Orchid}{#1}}
+
+
+
+% Colour Section Titles
+\usepackage[dvipsnames]{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% Current heading colour (stored as a name)
+\def\currentheadingcolor{Plum}
+
+% Section heading: Plum
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{Plum}}
+  {\thesection}{1em}{}
+
+% Subsection heading: Orchid
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{Orchid}}
+  {\thesubsection}{1em}{}
+
+% For highlightng text
+\newcommand{\skyblue}[1]{\textcolor{SkyBlue}{#1}}
+
+
+% Bullets inherit the colour of the nearest heading
+
+% % Update current colour when entering a heading
+% \AddToHook{cmd/section/before}{%
+%   \gdef\currentheadingcolor{Plum}%
+% }
+% \AddToHook{cmd/subsection/before}{%
+%   \gdef\currentheadingcolor{Orchid}%
+% }
+% % Automatically colour itemize bullets
+% \setlist[itemize,1]{
+%   label=\textcolor{\currentheadingcolor}{\textbullet}
+% }
+% \setlist[itemize,2]{
+%   label=\textcolor{\currentheadingcolor}{\textbullet}
+% }
+
+\title{\textbf{Notes for week 0 MT 2026}}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Meeting Notes October 9}
+
+\begin{itemize}
+    \item We discussed the multiplicity issue. Something that would be nice to do is to explore the deterioriation issue and try to pinpoint why/how it occurs. Is it due to oscillations? Do we need the constant in the approximation bound deterioriate (because of the derivative size)? This would be something interesting to explore.
+    \item I should be filling in some background in parallel with the creation of a paper. Two key pieces of material are Matt's book (explore more chapters) and Moiola's notes on Fredholm operators. For the Fredholm thheory, Umberto recommended that I focus on the theory from a bounded, Helmholtz, pespective, as is presented in the Moiola paper (and the references therein). This is a practical choice - most operators we want to deal with will fall under this umbrella.
+    \item One key contribution we have made that we want to present in the paper is this variational issue, where being conforming is not enough. I will need to spend more time here making sure I am prepared to write this up. 
+    \item Of course, there is this fascinating question of recycling information between $z$ values. Is there something we can compute the derivative w.r.t $z$ of? Could we use that to determine if information can carry across $z$ values? For example, could we use the derivative of the goal functional w.r.t $z$? This is an open question that we can explore. 
+    \item Biggest issue we want to address is the fact that we are using a direct solver. Thus, we want to explore multilevel solvers for eigenproblems. The most obvious immediate choice is LOBPCG because the inner eigenproblems are self-adjoint and nonnegative. In terms of learning about preconditioning, Patrick and Umberto suggested the demos in Firedrake (practical aspect) also SLEPc manuals and technical reports (see if there is preconditioner info, ask AI). Apparently there is someone in Prague? who is interested in getting involved with us on this topic.
+    \item First task - Give Chat my thesis and ask it to make a manuscript just to get a sense of what it could look like. If it is close to 20 pages, we can decide whether of not we can add in a preconditioning discussion or if it is better saved for another paper. 
+    \item Another immediate task is to extend the localization to folding second order operators so that we can apply it to examples like advection--diffusion. I could talk to Yue about this task because she had to extend DWR for time dependence. 
+    \item Implement Mike's suggestion and run a comparison for a known solution. Share the results with him. 
+    \item Get the counter-example code from Umberto.
+    \item An open question is how we will construct a working discretiation for these more complicated examples (like advection--diffusion on an L). Umberto thinks we might be able to do this with the Trefetz? method (new and upcoming). This is another avenue we can explore (later). 
+    \item Umberto said that there are two parallel paths to explore; the anallysis side of things (convergence, Fredholm, etc) and the solver side of things (fast solvers, etc). 
+    \item Ask Pablo to help with localisation for H2 conforming problems. 
+    \item Pick a broadening course. Hopefully Matt's spectral theory. 
+    \item Meetings with Umberto Monday mornings. 
+\end{itemize}
+
+
+\section{To-Do Next Week}
+
+\begin{itemize}
+    \item Some desriable background review on thesis.
+    \item Ask AI about thesis $\rightarrow$ manuscript.
+    \item Bug Pablo about localisation. 
+    \item Sort out broadening course. 
+    \item When time, maybe do some Git review, MPI learning, etc, as outlined on Patrick's `research with me' note. 
+\end{itemize}
+
+
+
+\section{Running To-Do List Week 0}
+
+\begin{itemize}
+    \item Thesis review. 
+    \item Make note of immediate, short-term, and long-term work. 
+    \item Make a plan for the background reading I want to undertake. For example, Fredholm operators and spectra, Matt's book, etc. 
+    \item Organize my calender.
+    \item Make some organisational plans. How will I track the papers I read? How will I organise my notes? 
+    \item Website for visibility.
+    \item Buy Matt's book. 
+    \item Sort Milan Conference
+\end{itemize}
+
+\section{Logs}
+
+I only got to start doing work on Thursday afternoon and on Friday, so I will just keep a single log list for this week. 
+
+\begin{itemize}
+    \item On Thursday, I read through my thesis and made some notes on what to review, learn, and what still needs exploring. These notes are below.
+    \item On Friday, I began typing up some of these notes. 
+    \item I also identified some administrative questions I have. 
+\end{itemize}
+
+
+\section{Questions}
+
+\begin{itemize}
+    \item I think I have a place in the minimsymposium, “Adaptive High-Order Methods for PDE Approximation: A Young Researchers Minisymposium”, in the The 16th International Conference on Spectral and High-Order Methods (ICOSAHOM 2027). What are my next steps?
+    \item Should I be taking a broadening course this term?
+    \item Sorting funding out for conference and beyond. 
+    \item What should I focus in on in near future? I feel like there are alot of questions and I do not know where to start:
+    \begin{itemize}
+        \item I would like to work on more background. This includes more spectral theory, more of Matt's book, Fredholm operator theory, 
+    \end{itemize}
+\end{itemize}
+
+
+
+
+\section{Thesis Review}
+
+I went back over my thesis and made note of topics/results I would like to review, knowledge gaps I would like to fill, and open questions we could explore. 
+
+\subsection{To  (i.e., to write some better notes on)}
+
+\begin{itemize}
+    \item Nick's text (just a nice review).
+    \item NLA (iterative) methods. How do we compute clusters with SLEPc? Ideal parameters for the inner problems?
+    \item Properties of nonnegative, self-adjoint operators.
+    \item Why closed operator is boundedly invertible iff it has trivial nullspace and range is the Hilbert space. Why the spectrum of a nonclosed operator is the whole plane. 
+    \item Closed operators, compact operators. 
+    \item Domain choices and density of Sobolov spaces in $L^2.$
+    \item Banach and Hilbert Adjoints. Also in finite dimensions.
+    \item Relating spectrum of an operator to the spectrum of its adjoint. 
+    \item Equivalent pseudospectra definitions (proof). 
+    \item The discretise-then-solve approach. When can we get non-point spectra? Why do pitfalls occur? What are the eigenfunctions of non-eigenvalues? Is it really so bad or do you just need to be careful?
+    \item Other failure modes of discretise-then-solve.
+    \item Essential spectra (chapter 8 of Matt's text). Weyl sequences. 
+    \item History and physical context of the Maxwell problem.
+    \item The FEEC/Boffi explanation of spectral pollution for Maxwell. 
+    \item Injection moduli (finite vs. infinite) and norm dependence. Using norm of $\mathcal{H}$ instead of $D(A).$
+    \item Why distance is equal to gamma for normal operator. 
+    \item Inverse resolvent norm and injection moduli proof. 
+    \item Assumptions on phi and the convergence that follows. 
+    \item Dual and Anitdual. What does Riesz representation look like in each case?
+    \item FE version of Colbrook's folding.
+    \item The variational issues we found. Umberto's counter examples. 
+    \item General DWR. Dual equation vs Adjoint eigenproblem.
+    \item \skyblue{FIX DWR ERROR ESTIMATE.}
+    \item Rognes and Logg localisation. Bubble and cones. 
+    \item Fredholm theory, Garding inequality, and point spectra results. 
+    \item Compact resolvents.
+    \item Least squares and orthogonal projections.
+    \item Avoiding $|z|^2$ for Maxwell. 
+    \item Why the contour?
+    \item Review Maxwell speedups.
+    \item Overall Code Review.
+    
+\end{itemize}
+
+
+\subsection{To Learn}
+
+\begin{itemize}
+    \item The variational issues we found. Umberto's counter examples. 
+        \item Why do we want a variational view? What operators are `variational'?
+    \item $M$ need not be invertible claim. Can we just restrict to the range? Have we already? Is this claim even true? What is $M$ for mixed poisson? 
+    \item What is the real variational limitation. 
+    \item Why a sawtooth?
+    \item The details of the pseudospectra of the advection--diffusion example. 
+    \item Dirac Operators and Dirac folding.
+    
+\end{itemize}
+
+\subsection{To Explore}
+
+\begin{itemize}
+    \item Multiplicity issue. Should we instead match the whole eigenspace? What is special about the first discrete eigenvalue in a cluster? Isn't it just deemed slightly smaller than the other numerically? If we do a basis matching, what do we compute the error exstimate for? Do we compute an average estimate? 
+    \item Extending the localisation to account for advection diffusion. Do we want a general extension to fourth order operators or just derive a specific localisation for advection diffusion?
+    \item Should we just be doing p-refinement? 
+    \item DWR not designed for general spectral values. Is DWR the right chouce? Can we extend it or should we do something different?
+    \item Correction vs. Enriched solve. Can we find examples where the correction substantially wins? Or will that not be the case?
+    \item Mike Giles' tighter bound and its impact on computations. How can I deem it better or worse? 
+    \item Can we get a tighter Lipschitz constant than one for gamma? I think one is an upper bound. Matt goes into this in an exercise of his book. 
+    \item Inner $O(h_K^2)$ criteria. Do we want to explore something else? Where else does something like this show up? 
+    \item Further investigate the deterioration as $\text{Re}(z)$ increases. 
+    \item Can we find any easy speedups like we did for Maxwell? 
+    \item What other examples and why? 
+    \item Can we do better than Dirac folding?
+    \item For a non-normal operator, can we relate its spectra to the analagous Dirac operator? 
+    \item How will we get around (or fix) the variational limitation of Colbrook's approach? 
+    \item To make runninf in parallel easier, I do not carry solutions as initial guesses for nearby $z$ values. It would be interesting to explore a `smart' way to do this. What $z$ values  should be grouped together and why? 
+    \item Nick talks a bit about eliminating whole discs in the complex plane. Maybe there is something there for us to explore? 
+    \item Can we develop and/or apply preconditioners for eigenproblems? 
+\end{itemize}
+
+
+
+
+\end{document}
