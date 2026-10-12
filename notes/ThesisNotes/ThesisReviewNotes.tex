@@ -1,0 +1,248 @@
+% \documentclass[12pt,a4paper]{article}
+
+% \setlength{\topmargin}{0.0in}
+% \setlength{\oddsidemargin}{0.33in}
+% \setlength{\textheight}{9.0in}
+% \setlength{\textwidth}{6.0in}
+% \renewcommand{\baselinestretch}{1.25}
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+
+\newtheoremstyle{boldthm}
+  {3pt}        % space above
+  {3pt}        % space below
+  {\itshape}   % body font
+  {}           % indent
+  {\bfseries}  % theorem head font
+  {.}          % punctuation
+  {.5em}       % space after theorem head
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+\newtheoremstyle{bolddefn}
+  {3pt}
+  {3pt}
+  {\itshape} 
+  {}
+  {\bfseries}
+  {.}
+  {.5em}
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ \textbf{(#3)}}}
+
+
+\theoremstyle{boldthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{bolddefn}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+
+% % Make all sections Plum
+% \usepackage[dvipsnames]{xcolor}
+% \usepackage{titlesec}
+% % This automatically colors all section titles Plum
+% \titleformat{\section}
+%   {\color{Plum}\normalfont\Large\bfseries}{\thesection}{1em}{}
+% \titleformat{\subsection}
+%   {\color{Plum}\normalfont\Large\bfseries}{\thesubsection}{1em}{}
+% % Shortcut for standard Orchid
+% \newcommand{\spring}[1]{\textcolor{Orchid}{#1}}
+
+
+
+% Colour Section Titles
+\usepackage[dvipsnames]{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% Current heading colour (stored as a name)
+\def\currentheadingcolor{Plum}
+
+% Section heading: Plum
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{Plum}}
+  {\thesection}{1em}{}
+
+% Subsection heading: Orchid
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{Orchid}}
+  {\thesubsection}{1em}{}
+
+% For highlightng text
+\newcommand{\skyblue}[1]{\textcolor{SkyBlue}{#1}}
+
+
+% Bullets inherit the colour of the nearest heading
+
+% % Update current colour when entering a heading
+% \AddToHook{cmd/section/before}{%
+%   \gdef\currentheadingcolor{Plum}%
+% }
+% \AddToHook{cmd/subsection/before}{%
+%   \gdef\currentheadingcolor{Orchid}%
+% }
+% % Automatically colour itemize bullets
+% \setlist[itemize,1]{
+%   label=\textcolor{\currentheadingcolor}{\textbullet}
+% }
+% \setlist[itemize,2]{
+%   label=\textcolor{\currentheadingcolor}{\textbullet}
+% }
+
+\title{\textbf{Thesis Review Notes Based on Viva Review}}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Functional Analysis Review}
+
+Here I review some very specific topics and results that I reviewed for my viva. 
+
+\subsection{The First and Second Algebraic Dual Space \cite[pg. 106-107]{krey} }
+
+The \textit{first algebraic dual space} $X^*$ of a vector space $X$ is the set of all linear functionals defined on $X.$ The \textit{second algebraic dual space} of $X$ is $X^{**}.$ There is an important relation between $X$ and $X*.$ To see this, let $x$ be a general element of $X,$ $f$ be a general element of $X^*,$ and $g$ be an element of $X^{**}.$ This $g$ is obtained by fixing $x \in X$ and setting
+\begin{equation}
+    g(f) =g_x(f) = f(x).
+\end{equation}
+Thus, to each $x \in X$ we can find a $g_x \in X^{**}.$ This relation defined the canonical mapping $J_X : X \rightarrow X^**$ by
+\begin{equation}
+    \langle J_x u, f \rangle_{X^{**}, X^*} = \langle f, u \rangle_{X^*, X}.
+\end{equation}
+
+\subsection{Isomorphisms \cite[pg. 108]{krey} }
+
+Given two spaces $X$ and $\tilde X$ of the same kind (both vector spaces, normed spaces, etc), we want to know if the spaces are `` essentially identical." That is, we want to know if they differ at most by the nature of their points. If so, then we may regard the spaces as identical when we care about the space structure and not about the nature of its points. 
+
+This idea leads to the concept of an \textit{isomorphism}, which is a bijective map from $X$ to $\tilde X$ that preserves structure\footnote{For metric spaces, the structure is the metric; for a vector space, the structure is the two operations, and so on.} For example, when $X$ and $\tilde X$ are metric spaces, an isomorphism is a bijective map that preserves distances. 
+
+This brings us back to the canonical mapping of the previous section. The canonical mapping is injective. Furthermore, it is an isomorphism from $X$ onto its image. Recall that if $X$ is isomorphic to a subset of $Y$, then $X$ is \textit{embeddable} in $Y.$ Thus, here, $X$ is embeddable in $X^{**},$ where $J_X$ is the canonical embedding. Furthermore, if $J_X$ is surjective (,and hence bijective) then $X$ can be identified with $X^{**}.$ In this case, $X$ is said to be \textit{algebraically reflexive.}
+
+\subsection{Normed Spaces; Isopmorphism, Dual, Anti-Dual \cite[Section 2.10]{krey}}
+
+Now let $X$ be a normed space. An isomorphism of a normed space $X$ onto a normed space $\tilde X$ is a bijective linear map $T : X \rightarrow \tilde X$ that preserves norms, i.e., $\| Tx \| = \|x\|$. In that case, $X$ and $\tilde X$ are isomorphic. From an abstract point of view, $X$ and $\tilde X$ can be taken to be identical, where points in $X$ can be `renamed' as points in $\tilde X$ by attaching a $T$ to each point. 
+
+
+Recall that when $X$ is a normed space, the \textit{dual space} $X^*$ is the space of all bounded linear functionals on $X.$ Furthermore, recall that taking the dual reverses inclusions:
+\begin{equation}
+    V \subset W \implies W^* \subset V^*.
+\end{equation}
+
+In the complex setting, we often consider the \textit{anti-dual space}, which is the space of all bounded conjugate-linear functionals on $X.$ 
+
+\subsection{Hilbert Spaces \cite[Section 3.1]{krey}}
+
+ Recall that an \textit{inner product} is a map $(\cdot, \cdot) : X \times X \rightarrow \mathbb{F}$ ($\mathbb{F}$ is the field of interest, either $\mathbb{R}$ or $\mathbb{C})$ that satisfies:
+\begin{itemize}
+    \item $(x+y, z) = (x, z) + (y, z)$
+    \item $(\alpha x, y ) = a (x, y)$
+    \item $(x, y) = \overline{(y, x)}$
+    \item $(x, x) \ge 0  \text{ and } (x, x) = 0 \iff x = 0,$ 
+\end{itemize}
+for every $x, y \in X$ and $\alpha \in \mathbb{F}.$ An isomorphism $T: X \rightarrow \tilde X$ between inner product spaces $X$ and $\tilde X$ is a bijective linear operator that preserves the inner product, i.e., $(Tx, Ty) = (x, y).$
+
+
+Hilbert spaces are complete inner product spaces. Since the inner product induces the norm $\|x\|^2 = (x, x),$ a Hilbert space is also a Banach space (one-way implication). 
+
+\subsection{Total Orthonormal Sets and Seperable Hilbert Spaces \cite[Section 3.6]{krey}}
+
+We begin with a metric space $X.$ A set $M \subset X$ is \textit{dense} in $X$ if $\overline M = X.$ The set $X$ is said to be \textit{separable} if it has a countable subset which is dense in $X$
+
+Now we turn to normed spaces. A \textit{total} set in a normed space $X$ is a subset $M \subset X$ whose span is dense in $X.$ Accordingly, if $X$ is an inner product space, then an orthonormal set in $X$ that is total in $X$ is called a total orthonormal set in $X.$ Every nontrivial Hilbert space has a total orthonormal set. Furthermore, every total orthonormal set in a Hilbert space has the same cardinality, which is called the \textit{Hilbert dimension} of the space. In fact, two Hilbert spaces are isomorphic if and only if they have the same Hilbert dimension. Thus, fir each Hilbert dimension, there is just one abstract real Hilbert space and just one abstract complex Hilbert space. In other words, two abstract Hilbert spaces over the same field are distinguished only by their Hilbert dimension. 
+
+\subsection{Riesz Representation \cite[Section 3.8]{krey} \cite[Secrion 2.4]{PatrickNote}}
+
+We begin by recalling Riesz's theorem:
+
+\begin{theorem}[Riesz Theorem]\footnote{See \cite[3.8-1]{krey}.}
+    Every bounded linear functional $f$ on a Hilbert space $H$ can be represented in terms of the inner product
+    \begin{equation}
+    f(x) = (x, z),
+\end{equation}
+where $x \in H$ and $z$ is uniquely determined by $f$ and has norm $\|z\| = \|f\|.$ This defines the \textit{Riesz map} $R : X^* \rightarrow X,$ which is an isometric isomorphism (linear, bijective, norm preserving) that maps $f \mapsto z.$ 
+\end{theorem}
+
+
+Let $X$ and $Y$ be two vector spaces over the same field $\mathbb{F}.$ A \textit{sesquilinear} form $h$ is a mapping $h : X \times X \rightarrow \mathbb{F}$ such that for all $x, x_1, x_2 \in X,$ for all $y, y_1, y_2 \in Y,$ and for all scalars $\alpha, \beta,$ we have
+\begin{itemize}
+    \item $h(x_1 + x_2, y) = h(x_1, y) + h(x_2, y)$
+    \item $h(x, y_1 + y_2) = h(x, y_1) + h(x, y_2)$
+    \item $h(\alpha x, y) = \alpha h(x, y)$
+    \item $h(x, \beta y) = \overline{\beta} h(x, y).$
+\end{itemize}
+Thus, $h$ is linear in its first argument and conjugate-linear in its second. When $X$ and $Y$ is linear, the last condition reads $h(x, \beta y) = \beta h(x, y)$ and $h$ is called \textit{bilinear} (linear in both arguments). 
+
+From the Riesz theorem, we can obtain a general representation of sesquilinear forms on Hilbert spaces:
+\begin{theorem}[Riesz Representation for Sesquilinear Forms]
+    Let $H_1$ and $H_2$ be two Hilbert spaces and let $h : H_1 \times H_2 \rightarrow \mathbb{F}$ be a bounded sesquilinear form. Then $h$ has the representation 
+\begin{equation}
+    h(x, y) = (Sx, y),
+\end{equation}
+where $S : H_1 \rightarrow H_2$ is a bounded linear operator. This $S$ is uniquely determined by $h$ and has norm $\| S \| = \| h \|.$
+\end{theorem}
+
+
+
+
+\subsection{Orthogonal Projections \cite[Section 3.3, 9.5]{krey}}
+
+$Y$ is a closed subpace of the metric space $X$ iff it has the following property: if $x_n \in Y$ and $x_n \rightarrow x$ then $x \in Y$ (that is, $Y$ contains all its limit points, or $Y = \overline Y$). 
+
+Let $Y$ be aby closed subspace of the Hilbert space $H.$ Then we can write 
+\begin{equation}
+    H = Y  \oplus Y^\perp.
+\end{equation}
+In other words, for every $x \in H$ we can \textbf{uniquely} write $x = y + z$ where $y \in Y$ and $z \in Y^\perp.$ With this, we define $y = x-z$ to be the \textit{orthogonal projection} of $x$ onto $Y$ (it is the component of $x$ that is perpendicular to $Y$). 
+
+This defined the mapping $P : H \rightarrow Y$ by $x\mapsto y = Px$ which is the orthogonal projection of $H$ onto $Y.$ This $P$ is also idempotent, that is, $P^2 = P.$ Also, $P$ maps $Y$ to itself and $P$ maps $Y^\perp$ to $\{0\}.$ Thus, $Y^\perp$ is the nullspace of $P.$ 
+
+\subsection{Unbounded Operators on Hilbert Spaces}
+
+\subsection{Hilbert Adjoint of Unbounded Operators}
+
+\subsection{Selected Spectral Theory Results from the Thesis}
+
+\subsection{Injection Moduli and Types of Spectra}
+
+
+
+\newpage
+\bibliographystyle{plainurl}
+\bibliography{background}
+
+
+\end{document}
