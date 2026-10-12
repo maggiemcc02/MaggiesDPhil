@@ -1,0 +1,326 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\newcommand{\Hb}{\mathcal{H}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\DeclareMathOperator{\dom}{D}
+\newcommand{\siginf}{\sigma_{\inf}}
+\newtheorem{proposition}{Proposition}
+
+\title{Folding the Neumann Laplacian with Argyris elements:\\
+       the square works, the pizza slice does not}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+This note is the computational companion to \texttt{colbrook\_setup.tex}. It
+carries out case~3 of that note (Laplace folding, $V = H^2\cap H^1$, $H = L^2$)
+for the \emph{Neumann} Laplacian, so that $V = H^2(\Omega)$ and no Dirichlet
+trace has to be pinned down on the Argyris degrees of freedom. Code:
+\texttt{Codes/folded\_neumann\_argyris.py}, \texttt{Codes/neumann\_exact\_spectra.py}.
+
+\section{The discrete problem}
+
+Let $A_N$ be the Neumann Laplacian,
+\begin{equation}
+  A_N = -\Delta, \qquad
+  \dom(A_N) = \{u \in H^1(\Omega) : \Delta u \in L^2(\Omega),\ \partial_\nu u = 0\}
+  \subset L^2(\Omega),
+\end{equation}
+which is self-adjoint, so $\gamma(z,A_N) = \siginf(A_N - z)$ and folding
+computes $\mathrm{dist}(z,\sigma(A_N))$ for real $z$.
+
+We do \emph{not} discretise $A_N = M^{-1}L$ directly. Following the variational
+viewpoint of \texttt{colbrook\_setup.tex} we keep the weak Laplacian
+$L\colon H^1 \to (H^1)^*$, $\langle Lu,w\rangle = (\nabla u,\nabla w)$, and the
+mass map $M\colon L^2 \to (L^2)^*$, and we fold
+\begin{equation}
+  G(z) = (L-zM)^* M^{-1} (L-zM) : V \to V^*,
+  \qquad
+  \siginf(A_N-z)^2 = \inf_{u \in V\setminus\{0\}}
+     \frac{\norm{(L-zM)u}_{(L^2)^*}^2}{\norm{u}_{L^2}^2},
+\end{equation}
+where $\norm{r}_{(L^2)^*} = \sup_{w \in H^1} \langle r,w\rangle / \norm{w}_{L^2}$.
+
+\paragraph{The boundary condition is natural, and $M^{-1}$ is what enforces it.}
+Because $V_h$ is $C^1$-conforming we really do fold $\Delta = \mathrm{div}\,\mathrm{grad}$:
+for $u \in H^2(\Omega)$ the integration by parts is exact,
+\begin{equation}\label{eq:ibp}
+  \langle (L-zM)u, w\rangle = (\nabla u, \nabla w) - z(u,w)
+   = (-\Delta u - zu,\, w)_{L^2(\Omega)}
+   + (\partial_\nu u,\, w)_{L^2(\partial\Omega)},
+\end{equation}
+and the code uses the second spelling, so that $\mathrm{div}(\mathrm{grad}(u))$
+and the boundary term both appear explicitly. That surface term carries no mesh
+size and no parameter --- it is not a penalty and not Nitsche. It \emph{is} the
+Neumann condition, as the following three-way comparison on the unit square
+($N=8$, exact values $3.0000000$, $2.1303956$, $9.4784176$) shows:
+\begin{center}\small
+\begin{tabular}{lrrr}
+\hline
+form used for $\langle (L-zM)u,\psi\rangle$ & $z=3$ & $z=12$ & $z=30$ \\
+\hline
+$(\nabla u,\nabla\psi) - z(u,\psi)$                                    & $3.0000000$ & $2.1303956$ & $9.4784179$ \\
+$-(\Delta u,\psi) + (\partial_\nu u,\psi)_{\partial\Omega} - z(u,\psi)$ & $3.0000000$ & $2.1303956$ & $9.4784179$ \\
+$-(\Delta u,\psi) - z(u,\psi)$ \quad (surface term dropped)             & $10^{-7}$   & \multicolumn{2}{c}{no convergence} \\
+\hline
+\end{tabular}
+\end{center}
+The first two rows agree to every digit; the third is the maximal Laplacian.
+Note that the integration by parts may only be performed on the Argyris slot:
+$w \in W_h$ lives in $H^1$ only, so $\mathrm{div}(\mathrm{grad}(w))$ is illegal.
+Returning to \eqref{eq:ibp},
+so $\norm{(L-zM)u}_{(L^2)^*} = \norm{\Delta u + zu}_{L^2}$ when
+$\partial_\nu u = 0$ and $+\infty$ otherwise. In other words the requirement
+``$(L-zM)u$ must be representable in $L^2$'', which is exactly the requirement
+that $M^{-1}$ can be applied, \emph{is} the Neumann condition. Nothing has to
+be imposed on the Argyris dofs, strongly or weakly.
+
+This matters. If instead one folds the strong form and minimises
+$\int_\Omega |\Delta u + zu|^2$ over all of $\mathrm{Argyris}_h$ with no
+constraint, one is folding the \emph{maximal} Laplacian, whose spectrum is all
+of $\C$; numerically $\siginf \approx 0$ for every $z$ (on the unit square with
+$N=16$ we measured $\siginf \le 3.6\cdot 10^{-5}$ at $z = 1, 5, 12, 30$,
+decreasing under refinement). And if one
+imposes $\partial_\nu u_h = 0$ pointwise on the Argyris dofs one gets the correct
+answer on a square, but on a domain whose boundary polygon has corner angles
+tending to $\pi$ the constraint forces $\nabla u_h = 0$ at every boundary
+vertex and the space collapses: on a regular $n$-gon inscribed in the unit
+disc we measured, at $z = 3$ and $z = 7$, the values
+$(1.93, 2.07)$ for $n = 4$, $(2.56, 4.05)$ for $n = 8$, $(3.00, 6.06)$ for
+$n = 16$ and $(3.0000, 7.0000)$ for $n = 32$ --- i.e.\ $\siginf(z) \to |z|$,
+only constants survive. This is the
+Babu\v{s}ka paradox in its usual disguise. The dual-norm form above has neither
+problem.
+
+\paragraph{Discretisation, and where the $M^{-1}$ goes.} $V_h =
+\mathrm{Argyris}_5(\mathcal{T}_h) \subset H^2$, and the supremum in the dual norm
+is taken over $W_h = \mathrm{CG}_4 \subset H^1$. The test space must be genuinely
+richer than the trial space, $\dim W_h > \dim V_h$: otherwise the residual matrix
+$R(z) = K - zM_{WV}$ has a kernel and $\siginf \equiv 0$.
+
+Unlike \texttt{folded\_maxwell.py}, where $A$ is first order and $A^*M^{-1}A$ is
+simply the $L^2$ inner product $(\mathrm{rot}\,E, \mathrm{rot}\,F)$, here $M^{-1}$
+genuinely has to be applied. We therefore carry the Riesz representative
+$w = M^{-1}(L-zM)u$ as a second unknown on $Z = W_h \times V_h$ and let SLEPc
+eliminate it:
+\begin{equation}\label{eq:pencil}
+  \begin{bmatrix} -M_W & R \\ R^* & 0 \end{bmatrix}
+  \begin{bmatrix} w \\ u \end{bmatrix}
+  = \lambda
+  \begin{bmatrix} 0 & 0 \\ 0 & M_V \end{bmatrix}
+  \begin{bmatrix} w \\ u \end{bmatrix},
+  \qquad \lambda = \siginf^2,
+\end{equation}
+whose first row is $w = M_W^{-1}Ru$ and whose second is
+$R^*M_W^{-1}Ru = \lambda M_V u$. In Firedrake this is one \texttt{LinearEigenproblem}
+built from the two forms
+\begin{align*}
+  a\bigl((w,u),(\psi,v)\bigr) &= -(w,\psi)
+     + \bigl[-(\Delta u,\psi) + (\partial_\nu u,\psi)_{\partial\Omega} - z(u,\psi)\bigr]
+     + \bigl[-(w,\Delta v) + (w,\partial_\nu v)_{\partial\Omega} - \bar z\,(w,v)\bigr], \\
+  b\bigl((w,u),(\psi,v)\bigr) &= (u,v),
+\end{align*}
+in which no mesh size, penalty or Nitsche term appears anywhere. Note that $w$
+is the Riesz representative $M^{-1}(L-zM)u$, \emph{not} a first-order splitting
+of the Laplacian: there is no $\sigma = \nabla u$ here, unlike
+\texttt{folded\_poisson.py}, where $A(u,\sigma) = (-i\sigma', -iu')$ is genuinely
+first order and is what lets that code drop to $C^0$ elements. Here the second
+block exists only to apply $M^{-1}$; the Laplacian itself is folded whole.
+
+Two practical points. $B$ in \eqref{eq:pencil} is positive \emph{semi}-definite
+(it is zero on the $w$ block), so the pencil is not a GHEP; it is solved as a
+GNHEP, and the $\dim W_h$ infinite eigenvalues are mapped to $0$ by the
+shift--invert and never selected. The target must be a finite \emph{negative}
+number, not $0$: the $(2,2)$ block of $A - \tau B$ is $-\tau M_V$, so a tiny
+$|\tau|$ makes the LU hit zero pivots, whereas $\tau = -1$ leaves the Schur
+complement $M_V + R^*M_W^{-1}R$, which is SPD for every $z$, including $z$ in the
+spectrum. Since all $\lambda \ge 0$, the eigenvalue closest to $\tau = -1$ is
+$\lambda_{\min}$, which is the one we want. One further detail: on strongly
+graded meshes the Argyris $1/h$, $1/h^2$ dof rescaling makes the entries span
+several decades and PETSc's LU with the natural ordering hits an exact zero
+pivot, so we ask for \texttt{-st\_pc\_factor\_mat\_ordering\_type rcm}.
+
+\section{Exact Neumann spectra}
+
+\paragraph{Unit square.} $\lambda = \pi^2(m^2+n^2)$, $m,n\ge 0$, eigenfunctions
+$\cos(m\pi x)\cos(n\pi y)$, all real-analytic. $\Omega$ is convex, so
+$\dom(A_N) = H^2(\Omega)\cap\{\partial_\nu u = 0\}$ and $V_h \subset \dom(A_N)$
+is conforming.
+
+\paragraph{Pizza slice.} $\Omega$ is the sector of radius $1$ and aperture
+$\omega = \tfrac32\pi$, as in Appendix~A of the spectral theory notes but with
+Neumann instead of Dirichlet data. Separating $\Phi = R(\rho)\Theta(\theta)$,
+the angular problem becomes $\Theta'' = -\mu\Theta$ with
+$\Theta'(0)=\Theta'(\omega)=0$, hence
+\begin{equation}
+  \Theta_n(\theta) = \cos\Bigl(\tfrac{2}{3}n\theta\Bigr),
+  \qquad
+  \mu_n = \Bigl(\tfrac{n\pi}{\omega}\Bigr)^2 = \Bigl(\tfrac{2n}{3}\Bigr)^2,
+  \qquad n = 0,1,2,\dots,
+\end{equation}
+so the Bessel order $\alpha_n = n\pi/\omega = 2n/3$ is the \emph{same} as in the
+Dirichlet case (there $\Theta_n = \sin(\tfrac23 n\theta)$, $n \ge 1$); Neumann
+only adds $n=0$. The radial factor is again $R = J_{\alpha_n}(\sqrt\lambda\rho)$,
+and $\partial_\rho R(1) = 0$ now gives $J_{\alpha_n}'(\sqrt\lambda) = 0$, so
+\begin{equation}
+  \Phi_{m,n}(\rho,\theta) = J_{\alpha_n}(j'_{\alpha_n,m}\,\rho)\cos\Bigl(\tfrac23 n\theta\Bigr),
+  \qquad
+  \lambda_{m,n} = \bigl(j'_{\alpha_n,m}\bigr)^2,
+\end{equation}
+$j'_{\alpha,m}$ being the $m$-th positive zero of $J_\alpha'$ (together with
+$\lambda = 0$, the constant). Contrast the Dirichlet answer
+$\lambda_{m,n} = (j_{\alpha_n,m})^2$ of Appendix~A.
+
+\begin{center}
+\begin{tabular}{rrrrl}
+\hline
+$\lambda$ & $n$ & $m$ & $\alpha_n$ & regularity of $\Phi_{m,n}$ \\
+\hline
+ $0.0000000$ & 0 & 0 & $0$   & analytic \\
+ $1.9634119$ & 1 & 1 & $2/3$ & $H^{5/3-\epsilon}$, \textbf{not} $H^2$ \\
+ $5.0974588$ & 2 & 1 & $4/3$ & $H^{7/3-\epsilon}$ \\
+ $9.3283632$ & 3 & 1 & $2$   & analytic \\
+$14.6170406$ & 4 & 1 & $8/3$ & $H^{11/3-\epsilon}$ \\
+$14.6819706$ & 0 & 1 & $0$   & analytic \\
+$20.9387920$ & 5 & 1 & $10/3$& $H^{13/3-\epsilon}$ \\
+$23.5286590$ & 1 & 2 & $2/3$ & $H^{5/3-\epsilon}$, \textbf{not} $H^2$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Since $J_{\alpha}(k\rho)\sim\rho^{\alpha}$ at the origin,
+$\Phi_{m,n} \in H^{1+2n/3-\epsilon}(\Omega)$, analytic exactly when $2n/3 \in \mathbb{Z}$.
+The eigenfunctions that fail to lie in $H^2$ are precisely those with
+$0 < \alpha_n < 1$, i.e.\ $n = 1$: the entire family
+\begin{equation}
+  \lambda_{m,1} = (j'_{2/3,m})^2 = 1.9634119,\ 23.5286590,\ 64.6642589,\dots
+\end{equation}
+with $\Phi_{m,1} \in H^{5/3-\epsilon}$ and no better. (Note $5/3 = 1 + \pi/\omega$,
+not $5/2$; an exponent $5/2$ would need $\pi/\omega = 3/2$, i.e.\ a convex
+corner $\omega = 2\pi/3$.) The lowest of them is already the \emph{first}
+nonzero eigenvalue.
+
+\section{Why the pizza slice must fail}
+
+Write $\dom(A_N)$ with the graph norm
+$\norm{u}_{A}^2 = \norm{u}^2_{L^2}+\norm{\Delta u}^2_{L^2}$ and put
+\begin{equation}
+  W := H^2(\Omega) \cap \{\partial_\nu u = 0\} \subset \dom(A_N).
+\end{equation}
+By Grisvard, on a domain with one re-entrant corner of aperture
+$\omega \in (\pi,2\pi)$ one has the topological direct sum
+$\dom(A_N) = W \oplus \mathrm{span}\{S\}$ with
+$S \simeq \rho^{\pi/\omega}\cos(\pi\theta/\omega)$; in particular $W$ is a
+\emph{closed} subspace of $\dom(A_N)$ of codimension one.
+
+\begin{proposition}\label{prop}
+Let $\lambda$ be a simple eigenvalue of $A_N$ whose eigenfunction $\varphi$ is
+not in $H^2$. Then
+$\gamma_W(\lambda) := \inf\{\norm{(A_N-\lambda)u}_{L^2} : u \in W,\ \norm{u}_{L^2}=1\} > 0.$
+\end{proposition}
+\begin{proof}
+Suppose $u_k \in W$, $\norm{u_k}=1$, $\norm{(A_N-\lambda)u_k}\to 0$. Split
+$u_k = c_k\varphi + r_k$ with $r_k \perp \varphi$. By the spectral theorem
+$\norm{(A_N-\lambda)u_k} = \norm{(A_N-\lambda)r_k} \ge \delta\norm{r_k}$ with
+$\delta = \mathrm{dist}(\lambda,\sigma(A_N)\setminus\{\lambda\}) > 0$, so
+$r_k \to 0$ in $L^2$ and $u_k \to \pm\varphi$ in $L^2$. Then
+$\Delta u_k = -\lambda u_k - (A_N-\lambda)u_k \to -\lambda\varphi$ in $L^2$ too,
+so $u_k \to \pm\varphi$ in the graph norm. As $W$ is graph-closed,
+$\varphi \in W \subset H^2$ --- a contradiction.
+\end{proof}
+
+Any $H^2$-conforming space satisfies $V_h \subset H^2$, and the dual norm
+\eqref{eq:ibp} forces $\partial_\nu u \to 0$; the discrete problem therefore
+$\Gamma$-converges to the minimisation over $W$, not over $\dom(A_N)$, and
+Proposition~\ref{prop} says the singular eigenvalues cannot be detected. Note
+that this is a statement about the \emph{space}, not about resolution:
+refining the mesh, or grading it toward the corner, does not help at all,
+because $W$ is closed.
+
+What the method converges to instead is
+\begin{equation}\label{eq:pred}
+  \siginf^h(z) \;\longrightarrow\; \mathrm{dist}\bigl(z,\ \sigma(A_N)\setminus\{\lambda_{m,1}\}\bigr),
+\end{equation}
+i.e.\ the sawtooth of the spectrum \emph{with the singular eigenvalues deleted}.
+
+\section{What the computations show}
+
+\paragraph{Unit square.} $\siginf^h(z)$ reproduces $\mathrm{dist}(z,\sigma(A_N))$ over
+$z \in [0,45]$ with maximum error $2.75\cdot10^{-4}$ ($N=6$),
+$5.66\cdot10^{-6}$ ($N=10$), $1.54\cdot10^{-7}$ ($N=16$) --- about
+$O(h^{7.6})$, consistent with $\siginf^2$ being an eigenvalue of a quintic
+$H^2$-conforming discretisation. No boundary condition is imposed anywhere in
+the code. See \texttt{output/of\_neumann\_argyris/square.pdf}.
+
+\paragraph{Pizza slice.} The smooth modes behave, the singular ones do not.
+Below, $\siginf^h$ at exact eigenvalues, where the true value is $0$ in every
+column; the last two rows grade the mesh toward the re-entrant corner.
+
+\begin{center}\small
+\begin{tabular}{lr|rr|rrr}
+\hline
+ & & \multicolumn{2}{c|}{singular, $\alpha=2/3$} & \multicolumn{3}{c}{in $H^2$} \\
+$h$ & $h_{\min}$ & $1.963412$ & $23.528659$ & $5.097459$ & $9.328363$ & $14.681971$ \\
+ & & & & ($\alpha=4/3$) & (analytic) & (analytic) \\
+\hline
+$0.20$ & $1.9\cdot10^{-1}$ & $1.963412$ & $2.570532$ & $0.664962$ & $0.371178$ & $0.117124$ \\
+$0.14$ & $1.3\cdot10^{-1}$ & $1.963412$ & $2.609765$ & $0.545006$ & $0.329740$ & $0.064499$ \\
+$0.10$ & $9.1\cdot10^{-2}$ & $1.963412$ & $2.615103$ & $0.523946$ & $0.292930$ & $0.036163$ \\
+$0.07$ & $6.2\cdot10^{-2}$ & $1.963412$ & $2.617157$ & $0.424935$ & $0.254975$ & $0.020143$ \\
+\hline
+$0.15$ & $2.7\cdot10^{-3}$ & $1.963412$ & $2.598933$ & $0.248126$ & $0.343742$ & $0.075959$ \\
+$0.15$ & $1.9\cdot10^{-4}$ & $1.963412$ & $2.607819$ & $0.219641$ & $0.334596$ & $0.074654$ \\
+\hline
+\multicolumn{2}{l|}{limit \eqref{eq:pred}}
+       & $\mathbf{1.963412}$ & $\mathbf{2.589867}$ & $0$ & $0$ & $0$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Read this table three ways.
+\begin{itemize}
+\item \textbf{$\alpha = 2/3$ (not in $H^2$).} $\siginf^h$ sits on the predicted
+  floor \eqref{eq:pred} and does not move: at $z=1.963412$ it agrees with
+  $\mathrm{dist}(z,\sigma(A_N)\setminus\{\lambda_{m,1}\}) = 1.9634119$ to every
+  digit printed, on all six meshes; at $z = 23.528659$ it agrees with
+  $2.589867$ to about $0.4\%$. Grading the mesh toward the corner by four
+  orders of magnitude in $h_{\min}$ changes nothing. \emph{These eigenvalues
+  are simply not in the spectrum that the method sees.}
+\item \textbf{$\alpha = 4/3$ (in $H^2$, but only $H^{7/3-\epsilon}$).} Captured,
+  but slowly, and corner grading helps a lot ($0.425 \to 0.220$): this is an
+  ordinary resolution problem, exactly the behaviour one expects for a function
+  that \emph{is} in the space being approximated badly.
+\item \textbf{analytic modes.} Captured. The purely radial one ($\alpha=0$)
+  converges cleanly, $0.117 \to 0.020$, roughly $O(h)$.
+\end{itemize}
+
+The contrast between the first two bullets is the whole point: grading fixes
+the $H^2$ mode and does nothing at all for the non-$H^2$ one, because the
+obstruction is the closed subspace of Proposition~\ref{prop} and not the mesh.
+
+\begin{center}
+\includegraphics[width=\textwidth]{../../../Codes/output/of_neumann_argyris/pacman.pdf}
+\end{center}
+In the figure the black markers are the eigenvalues whose eigenfunctions lie in
+$H^2$ --- the computed curves touch zero at every one of them --- and the two red
+markers are $\lambda_{1,1}$ and $\lambda_{2,1}$, where the computed curves ignore
+the notch in the exact (black dashed) distance function entirely.
+
+\paragraph{A caveat on the geometry.} The arc is meshed by straight-sided
+triangles, so $\partial_\nu\varphi = O(h)$ on the chords and the boundary term in
+\eqref{eq:ibp} limits the \emph{analytic} modes to $O(\sqrt h)$; the purely
+radial modes ($n \equiv 0$) escape this and converge like $O(h)$. Curving the
+geometry would remove it, but Firedrake's Argyris transformation evaluates the
+Jacobian at the cell barycentre and so is only valid on affine cells. This is
+a nuisance, not the phenomenon: it affects the modes that \emph{are} captured,
+not the ones that are missed.
+
+\end{document}
