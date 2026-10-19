@@ -1,0 +1,499 @@
+% \documentclass[12pt,a4paper]{article}
+
+% \setlength{\topmargin}{0.0in}
+% \setlength{\oddsidemargin}{0.33in}
+% \setlength{\textheight}{9.0in}
+% \setlength{\textwidth}{6.0in}
+% \renewcommand{\baselinestretch}{1.25}
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,array}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+% % Make all sections Plum
+% \usepackage[dvipsnames]{xcolor}
+% \usepackage{titlesec}
+% % This automatically colors all section titles Plum
+% \titleformat{\section}
+%   {\color{Plum}\normalfont\Large\bfseries}{\thesection}{1em}{}
+% \titleformat{\subsection}
+%   {\color{Plum}\normalfont\Large\bfseries}{\thesubsection}{1em}{}
+% % Shortcut for standard Orchid
+% \newcommand{\spring}[1]{\textcolor{Orchid}{#1}}
+
+
+
+% Colour Section Titles
+\usepackage[dvipsnames]{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% Current heading colour (stored as a name)
+\def\currentheadingcolor{Plum}
+
+% Section heading: Plum
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{Plum}}
+  {\thesection}{1em}{}
+
+% Subsection heading: Orchid
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{Orchid}}
+  {\thesubsection}{1em}{}
+
+% For highlightng text
+\newcommand{\skyblue}[1]{\textcolor{SkyBlue}{#1}}
+
+
+% Bullets inherit the colour of the nearest heading
+
+% % Update current colour when entering a heading
+% \AddToHook{cmd/section/before}{%
+%   \gdef\currentheadingcolor{Plum}%
+% }
+% \AddToHook{cmd/subsection/before}{%
+%   \gdef\currentheadingcolor{Orchid}%
+% }
+% % Automatically colour itemize bullets
+% \setlist[itemize,1]{
+%   label=\textcolor{\currentheadingcolor}{\textbullet}
+% }
+% \setlist[itemize,2]{
+%   label=\textcolor{\currentheadingcolor}{\textbullet}
+% }
+
+\title{\textbf{Notes for week 2 MT 2026}}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Meeting Notes October 19 (with Umberto)}
+
+
+\begin{itemize}
+    \item We discussed the $C^1$ extension of the Rognes and Logg localisation. For now, we think that taking $(\text{bubble})^2$ for the cell residual, and then taking the edge bubbles described in a Carstensen paper (see notes below) may be the way to go. I am iterating with chat now to try and get a first implementation so that we can assess.
+    \item While discussing the localisation, Umberto explained the extra complications of taking the normal trace of the Laplacian (as commonly occurs when working with the biLaplacian)(see his notes). He gave me some references for this discussion which I plan to dig into over the next few days. 
+    \item We also started going through the (poorly written) paper draft that came out of iterating with ChatGPT. The drafts are consistently 20 pages without the additional $C^1$ localisation, and without the additional examples we hope to do.
+\end{itemize}
+
+
+
+
+
+
+\section{Questions/Comments for Meeting October 19}
+
+% \textbf{Administrative}
+% \begin{itemize}
+%     \item Stuggling with the adjustment and with balancing many tasks and events. 
+%     \item When is Matt visiting?
+%     \item Abstract submission  for Milan.
+%     \item Gene Golub summer school. 
+% \end{itemize}
+
+\textbf{What have I been up to}
+
+\begin{itemize}
+    \item Sunday, Monday, and Tuesday I typed up some extra notes/proofs of topics I felt iffy on from my thesis. 
+    \item Every day - worked on reading up on the extension of the Rognes and Logg localisation (see below). I met with Pablo to talk about it. He directed me to a paper. I decided to backtrack and learn more about the role and choices of bubbles and cones for efficiency proofs. I spent most of the week working through the Veruth (96) paper which is the first place the biharmonic equation is handled. I then spent a little (need more) time on a Carstenson paper, which takes a slightly different approach. I am now working up to the paper Pablo gave me.
+    \item I also iterated with chat on converting the thesis to a paper. I believe it will hit the 20-page mark, especially once we add more examples, the Fredholm analysis, and the $C^1$ localisation. I am still confused about what the structure of the paper will be. How much background? 
+\end{itemize}
+
+\textbf{Questions}
+
+\begin{itemize}
+    \item Localisation issues
+    \begin{itemize}
+        \item Struggling with exactly the right choice of bubble and to track the right literature chain. Seems like we may want to combine approaches. 
+        \item Not quite there yet. Need to decide on local problems before coding something up. 
+    \end{itemize}
+    \item Paper questions:
+    \begin{itemize}
+        \item How much background (spectral theory, FE theory, Babuska Osborn, Matt theory, etc)
+        \item What story do we want to tell about variational folding? Do we want a counterexample? 
+        \item How much Fredholm operator theory?
+        \item Mike Giles addition, $C^1$ localisation, etc.
+        \item Do we need a Lipschitz proof? 
+        ]item Do we need self-adjoint simplifications?
+        \item What from the Maxwell example? Do we want to show pollution and inner loop results? 
+        \item Still may want to dive further into the deterioration of the results. 
+    \end{itemize}
+    \item Administrative questions
+    \begin{itemize}
+    \item Stuggling with the adjustment and with balancing many tasks and events. 
+    \item When is Matt visiting?
+    \item Abstract submission for Milan.
+    \item Gene Golub summer school. 
+\end{itemize}
+\end{itemize}
+
+\textbf{Still to do}
+
+\begin{itemize}
+    \item Look at slides from Umberto
+    \item Mike Giles tests
+    \item More examples
+\end{itemize}
+
+
+\section{Notes on Localisation}
+
+\subsection{What Rognes and Logg do}
+
+The big idea is to isolate the cell residual by choosing a test function that annihilates every facet contribution (bubble function). Then, for each facet, we choose test functions that annihilate every other facet contribution (cones). This creates a sequence of local problems. 
+
+The generic representation is:
+\begin{equation}
+    \text{local residual} = r_T(v) =  (R_T, v)_T + (R_{\partial T}, v)_{\partial T}.  
+\end{equation}
+
+To compute a piecewise polynomial approximation of $R_T$ we take 
+\begin{equation}
+    v = b_T \phi_i,
+\end{equation}
+where $b_T = \Pi_{i} \lambda_i^T.$
+Then, we seek $R_T$ such that 
+\begin{equation}
+    (R_T, b_T \phi_i)_T = r_T(b_T\phi_i).
+\end{equation}
+
+
+Then, for each facet $S$ on $\partial T,$ we use the cone function $\beta_S^T$ which is equal to the bubble function $b_S$ on $S,$ and is equal to zro on all other facets. With this, we set 
+\begin{equation}
+    v = \beta_S^T \phi_i
+\end{equation}
+and solve
+\begin{equation}
+(R_{\partial T}, \beta_S^T \Phi_i)_S = r_T(\beta_S^T \phi_i) + (R_T, \beta_S^T\Phi_i)_T.
+\end{equation}
+
+
+\subsection{What We Want} 
+
+We want to be able to apply a similar approach to a fourth-order problem, like the biharmonic equation. Thus, we want to consider the generic representation
+\begin{equation}
+    r_T(v) = (R_T, v)_T + (R_{\partial T}^0, v)_{\partial T} + (R_{\partial T}^1, \partial_n v)_{\partial T}. 
+\end{equation}
+
+For the cell problem, the approach seems clear (I hope). If we take the squares bubble, $b_T^2,$ we can solve for $R_T$ via
+\begin{equation}
+    (R_T, b_T^2 \phi_i) = r_T(b_T^2 \phi_i).
+\end{equation}
+
+
+However, the choice of test function for the facet problems are more complicated. To isolate $R_{\partial T}^1$ from $R_{\partial T}^0,$ we need a $v$ such that $v = 0$ on $S$ but $\partial_nv = b_S^2 \phi_i$ on $S.$ Let's call such $v$ our $v_1.$ Then, we solve 
+\begin{equation}
+    r_T(v_1) - (R_T, v_1)_T = (R_{\partial T}^1, b_S^2\phi_i)_S.
+\end{equation}
+Finally, then, to recover $R_{\partial T}^0$ we take $v_2$ such that $v = b_S^2 \phi_i$ on $S.$ Then, we solve 
+\begin{equation}
+    r_T(v_2) - (R_T, v_2)_T + (R_{\partial T}^1, \partial_nv_2)_S = (R_{\partial T}^0, b_S^2\phi_i)_S. 
+\end{equation}
+
+\textbf{The question that remains is, what do we take for $v_1$ and $v_2$??}
+
+
+% Three local problems - target cell, target one facet, target next facet
+
+\subsection{Choosing the right bubbles}
+
+Here, I have made a summary table of some choices of edge bubbles that I have seen in the literature so far.
+
+
+
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{2}
+
+\begin{tabular}{|l|p{0.42\textwidth}|p{0.35\textwidth}|}
+\hline
+\textbf{Choice} &
+\textbf{Cone $\chi_S$} &
+\textbf{Normal derivative on $S$} \\
+\hline
+
+Proposed &
+$\displaystyle
+\frac{\lambda_0^T}
+{\partial_{n_S}\lambda_0^T}
+(b_S)^2 \text{ (do not want - rational) }
+$ &
+$\displaystyle
+\partial_{n_S}\chi_S
+ = b_S^2$ \\
+\hline
+
+Verf\"urth &
+$\displaystyle
+(b_{T_2}-b_{T_1})b_S
+$ &
+$\displaystyle
+\partial_{n_S}\chi_S=c_S b_S^2
+$
+
+$\displaystyle
+c_S=\frac{27}{8}
+\left(\frac{h_S}{|T_1|}+
+\frac{h_S}{|T_2|}\right)
+$ \\
+\hline
+
+Carstensen &
+$\displaystyle
+b_S^2\,
+n_S\cdot(x-\operatorname{mid}(S)) 
+ \text{ (seems like best fit) } $&
+$\displaystyle
+\partial_{n_S}\chi_S=b_S^2
+$ \\
+\hline
+
+Cao et al. (Rhombus) &
+$\displaystyle
+b_S=b\,b_{\mathcal T}^{3},
+\quad b|_S=0 
+$ &
+$\displaystyle
+\partial_{n_S}b_S
+=h_S^{-1}b_{\mathcal T}^{3} 
+$ \\
+\hline
+
+
+\end{tabular}
+
+\caption{Comparison of normal-derivative facet cones.
+The test functions are $w_{S,i}=\chi_S\phi_i$.}
+\end{table}
+
+
+\subsection{Our Choice}
+
+For the first local problem, we take 
+\begin{equation}
+    v = b_T^2 \phi_i,
+\end{equation}
+where $\phi_i$ is a basis function for the polynomial space of interest (where we want to solve for $R_T$) and $b_T^2$ is the classic bubble function squared.  
+
+For each facet $S,$ we consider
+\begin{equation}
+    b(x) = (\beta_S^T)^2(x) n_E \cdot (x - \text{mid}(S))  \qquad \forall x \in \mathbb{R}^2,
+\end{equation}
+where $\beta_S^T$ is the cone/bubble function for $S,$ i.e., $\beta_S^T |_S = b_S = \lambda_1 \lambda_2.$ This should isolate $R_{\partial T}^1$ from $R_{\partial T}^0$ so that we can formulate the following local problem: take $v = b\phi_i$ and solve
+\begin{equation}
+    r_T(v) - (R_T, v)_T = (R_{\partial T}^2, b_S^2 \phi_i)_S,
+\end{equation}
+where $\phi_i$ is the relevant basis function for the polynomial space we seek $R_{\partial T}^1$ in. 
+
+Finally, for the other facet term, we take $v = (\beta_S^T)^2\phi_i,$ where $\phi_i$ is the basis function for the relevant polynomial space, and solve
+\begin{equation}
+    r_T(v) - (R_T, v)_T - (R_{\partial T}^1, \partial_n v)_S = (R_{\partial_T}^0, b_s^2 \phi_i)_S.
+\end{equation}
+
+
+
+
+
+
+
+% Make a chart comparing Veruth, Carstenson, and Pablo's paper. Does any option work right for us? 
+
+
+
+\section{Running To-Do List For This Week}
+
+\subsection{Adademic}
+\begin{itemize}
+    \item Sort out an implementation of the current idea for $C^1$ localisation. Hopefully the choice of bubbles/cones works as we expect!
+    \item Read into the discussion Umberto and I had about when you can take traces when handling the biLaplacian.
+    \item Continue thinking about / working on an outline of a paper. 
+    \item Prep for teaching next week.
+\end{itemize}
+
+\subsection{Running Overflow}
+
+\begin{itemize}
+    \item Some desriable background review on thesis. 
+    \item Sort of Firedrake installs. Get an updated complex Firedrake and retain branch. Pablo said to struggle with this for at most a day. (Before I write nany code).
+    \item Run a test for Mike Giles's tighter bound. (Next week)
+    \item Do some Git review, MPI learning, etc, as outlined on Patrick's `research with me' note. 
+\end{itemize}
+
+\subsection{Administrative}
+
+\begin{itemize}
+    \item Milan abstract submission Dec 31.
+    \item  Apply for Gene Golub summer school.
+    \item  Franz Rembart meeting Tuesday.
+    % \item Plumbers on Thursday. 
+    % \item Nails on Thursday.
+\end{itemize}
+
+
+
+\section{Logs}
+
+
+\textbf{Sunday}
+
+\begin{itemize}
+    \item Prepped for Pablo meeting. Reviewed Rognes and Logg localisation and explored ideas for its extension to the biharmonic equation.
+    \item Lecture from 11 to 1. 
+    \item Lunch and more meeting prep.
+    \item Met with Pablo 2-3.
+    \item Walk to college to collect card (3 to 3:30)
+    \item Some thesis review at college for rest of day.
+\end{itemize}
+
+
+\textbf{Monday}
+
+\begin{itemize}
+    \item 
+\end{itemize}
+
+\textbf{Tuesday}
+
+\begin{itemize}
+    \item
+\end{itemize}
+
+\textbf{Wednesday}
+
+\begin{itemize}
+    \item
+\end{itemize}
+
+\textbf{Thursday}
+
+\begin{itemize}
+    \item 
+\end{itemize}
+
+\textbf{Friday}
+
+\begin{itemize}
+    \item
+\end{itemize}
+
+
+
+
+
+\section{Running Thesis Review List}
+
+I went back over my thesis and made note of topics/results I would like to review, knowledge gaps I would like to fill, and open questions we could explore. 
+
+\subsection{To  (i.e., to write some better notes on)}
+
+\begin{itemize}
+    \item Nick's text (just a nice review).
+    \item NLA (iterative) methods. How do we compute clusters with SLEPc? Ideal parameters for the inner problems?
+    \item Properties of nonnegative, self-adjoint operators.
+    \item Why closed operator is boundedly invertible iff it has a trivial nullspace and its range is the Hilbert space. Why the spectrum of a nonclosed operator is the whole plane. 
+    \item Closed operators, compact operators. 
+    \item Domain choices and density of Sobolev spaces in $L^2.$
+    \item Banach and Hilbert Adjoints. Also in finite dimensions.
+    \item Relating the spectrum of an operator to the spectrum of its adjoint. 
+    \item Equivalent pseudospectra definitions (proof). 
+    \item The discretise-then-solve approach. When can we get non-point spectra? Why do pitfalls occur? What are the eigenfunctions of non-eigenvalues? Is it really so bad or do you just need to be careful?
+    \item Other failure modes of discretise-then-solve.
+    \item Essential spectra (chapter 8 of Matt's text). Weyl sequences. 
+    \item History and physical context of the Maxwell problem.
+    \item The FEEC/Boffi explanation of spectral pollution for Maxwell. 
+    \item Injection moduli (finite vs. infinite) and norm dependence. Using norm of $\mathcal{H}$ instead of $D(A).$
+    \item Why distance is equal to gamma for normal operator. 
+    \item Inverse resolvent norm and injection moduli proof. 
+    \item Assumptions on phi and the convergence that follows. 
+    \item Dual and Anitdual. What does Riesz representation look like in each case?
+    \item FE version of Colbrook's folding.
+    \item The variational issues we found. Umberto's counterexamples. 
+    \item General DWR. Dual equation vs Adjoint eigenproblem.
+    \item \skyblue{FIX DWR ERROR ESTIMATE.}
+    \item Rognes and Logg localisation. Bubble and cones. 
+    \item Fredholm theory, Garding inequality, and point spectra results. 
+    \item Compact resolvents.
+    \item Least squares and orthogonal projections.
+    \item Avoiding $|z|^2$ for Maxwell. 
+    \item Why the contour?
+    \item Review Maxwell speedups.
+    \item Overall Code Review.
+    
+\end{itemize}
+
+
+\subsection{Running To Learn List}
+
+\begin{itemize}
+    \item The variational issues we found. Umberto's counterexamples. 
+        \item Why do we want a variational view? What operators are `variational'?
+    \item $M$ need not be invertible claim. Can we just restrict to the range? Have we already? Is this claim even true? What is $M$ for mixed Poisson? 
+    \item What is the real variational limitation? 
+    \item Why a sawtooth?
+    \item The details of the pseudospectra of the advection--diffusion example. 
+    \item Dirac Operators and Dirac folding.
+    
+\end{itemize}
+
+\subsection{Running To Explore List}
+
+\begin{itemize}
+    \item Multiplicity issue. Should we instead match the whole eigenspace? What is special about the first discrete eigenvalue in a cluster? Isn't it just deemed slightly smaller than the other numerically? If we do a basis matching, what do we compute the error estimate for? Do we compute an average estimate? 
+    \item Extending the localisation to account for advection-diffusion. Do we want a general extension to fourth-order operators or just derive a specific localisation for advection diffusion?
+    \item Should we just be doing p-refinement? 
+    \item DWR is not designed for general spectral values. Is DWR the right chouce? Can we extend it or should we do something different?
+    \item Correction vs. Enriched solve. Can we find examples where the correction substantially wins? Or will that not be the case?
+    \item Mike Giles' tighter bound and its impact on computations. How can I deem it better or worse? 
+    \item Can we get a tighter Lipschitz constant than one for gamma? I think one is an upper bound. Matt goes into this in an exercise of his book. 
+    \item Inner $O(h_K^2)$ criteria. Do we want to explore something else? Where else does something like this show up? 
+    \item Further investigate the deterioration as $\text{Re}(z)$ increases. 
+    \item Can we find any easy speedups like we did for Maxwell? 
+    \item What other examples and why? 
+    \item Can we do better than Dirac folding?
+    \item For a non-normal operator, can we relate its spectra to the analogous Dirac operator? 
+    \item How will we get around (or fix) the variational limitation of Colbrook's approach? 
+    \item To make running in parallel easier, I do not carry solutions as initial guesses for nearby $z$ values. It would be interesting to explore a `smart' way to do this. What $z$ values should be grouped together and why? 
+    \item Nick talks a bit about eliminating whole discs in the complex plane. Maybe there is something there for us to explore? 
+    \item Can we develop and/or apply preconditioners for eigenproblems? 
+\end{itemize}
+
+
+
+
+\end{document}

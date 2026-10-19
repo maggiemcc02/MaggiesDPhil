@@ -32,6 +32,8 @@
 \usepackage{mathtools}
 \newcommand{\defeq}{\vcentcolon=}
 \newcommand{\eqdef}{=\vcentcolon}
+\newcommand{\Sp}[1]{\operatorname{Sp}\!\left(#1\right)}
+\newcommand{\Spe}[1]{\operatorname{Sp}_{\epsilon}\!\left(#1\right)}
 
 \newtheoremstyle{boldthm}
   {3pt}        % space above
@@ -184,7 +186,7 @@ We begin with a metric space $X.$ A set $M \subset X$ is \textit{dense} in $X$ i
 
 Now we turn to normed spaces. A \textit{total} set in a normed space $X$ is a subset $M \subset X$ whose span is dense in $X.$ Accordingly, if $X$ is an inner product space, then an orthonormal set in $X$ that is total in $X$ is called a total orthonormal set in $X.$ Every nontrivial Hilbert space has a total orthonormal set. Furthermore, every total orthonormal set in a Hilbert space has the same cardinality, which is called the \textit{Hilbert dimension} of the space. In fact, two Hilbert spaces are isomorphic if and only if they have the same Hilbert dimension. Thus, fir each Hilbert dimension, there is just one abstract real Hilbert space and just one abstract complex Hilbert space. In other words, two abstract Hilbert spaces over the same field are distinguished only by their Hilbert dimension. 
 
-\subsection{Riesz Representation \cite[Section 3.8]{krey} \cite[Secrion 2.4]{PatrickNote}}
+\subsection{Riesz Representation \cite[Section 3.8]{krey} \cite[Section 2.4]{PatrickNote}}\label{Riesz}
 
 We begin by recalling Riesz's theorem:
 
@@ -193,18 +195,18 @@ We begin by recalling Riesz's theorem:
     \begin{equation}
     f(x) = (x, z),
 \end{equation}
-where $x \in H$ and $z$ is uniquely determined by $f$ and has norm $\|z\| = \|f\|.$ This defines the \textit{Riesz map} $R : X^* \rightarrow X,$ which is an isometric isomorphism (linear, bijective, norm preserving) that maps $f \mapsto z.$ 
+where $x \in H$ and $z$ is uniquely determined by $f$ and has norm $\|z\| = \|f\|$ (ordering follows from the fact that $f$ must be linear in $x$). This defines the \textit{Riesz map} $R : H^* \rightarrow H,$ which is an isometric isomorphism (conjugate-linear, bijective, norm-preserving) that maps $f \mapsto z.$ 
 \end{theorem}
 
 
-Let $X$ and $Y$ be two vector spaces over the same field $\mathbb{F}.$ A \textit{sesquilinear} form $h$ is a mapping $h : X \times X \rightarrow \mathbb{F}$ such that for all $x, x_1, x_2 \in X,$ for all $y, y_1, y_2 \in Y,$ and for all scalars $\alpha, \beta,$ we have
+Let $X$ and $Y$ be two vector spaces over the same field $\mathbb{F}.$ A \textit{sesquilinear} form $h$ is a mapping $h : X \times Y \rightarrow \mathbb{F}$ such that for all $x, x_1, x_2 \in X,$ for all $y, y_1, y_2 \in Y,$ and for all scalars $\alpha, \beta,$ we have
 \begin{itemize}
     \item $h(x_1 + x_2, y) = h(x_1, y) + h(x_2, y)$
     \item $h(x, y_1 + y_2) = h(x, y_1) + h(x, y_2)$
     \item $h(\alpha x, y) = \alpha h(x, y)$
     \item $h(x, \beta y) = \overline{\beta} h(x, y).$
 \end{itemize}
-Thus, $h$ is linear in its first argument and conjugate-linear in its second. When $X$ and $Y$ is linear, the last condition reads $h(x, \beta y) = \beta h(x, y)$ and $h$ is called \textit{bilinear} (linear in both arguments). 
+Thus, $h$ is linear in its first argument and conjugate-linear in its second. When $X$ and $Y$ are real, the last condition reads $h(x, \beta y) = \beta h(x, y)$ and $h$ is called \textit{bilinear} (linear in both arguments). 
 
 From the Riesz theorem, we can obtain a general representation of sesquilinear forms on Hilbert spaces:
 \begin{theorem}[Riesz Representation for Sesquilinear Forms]
@@ -212,7 +214,7 @@ From the Riesz theorem, we can obtain a general representation of sesquilinear f
 \begin{equation}
     h(x, y) = (Sx, y),
 \end{equation}
-where $S : H_1 \rightarrow H_2$ is a bounded linear operator. This $S$ is uniquely determined by $h$ and has norm $\| S \| = \| h \|.$
+where $S : H_1 \rightarrow H_2$ is a bounded linear operator (ordering follows from the fact that $h$ must be linear in $x$ and conjugate-linear in $y$). This $S$ is uniquely determined by $h$ and has norm $\| S \| = \| h \|.$
 \end{theorem}
 
 
@@ -232,11 +234,402 @@ This defined the mapping $P : H \rightarrow Y$ by $x\mapsto y = Px$ which is the
 
 \subsection{Unbounded Operators on Hilbert Spaces}
 
+% For unbounded operators, we need to be extra careful when considering domains, adjoints, and extensions. For example, we need to distinguish between a symmetric operator and a self-adjoint operator. A symmetric operator is necessarily symmetric but also must have the same domain as its adjoint. 
+
+For unbounded operators, particular care must be taken when considering domains, adjoints, and extensions. In particular, it is important to distinguish between symmetric and self-adjoint operators. A densely defined operator $A: D(A) \subset H \rightarrow H$ is symmetric if $(Ax, y) = (x, Ay)$ for each $x, y \in D(A)$. However, self-adjointness requires the stronger condition $A=A^*$. Thus, a symmetric operator is self-adjoint if and only if its domain coincides with that of its adjoint, i.e., $\mathcal{D}(A)=\mathcal{D}(A^*)$.
+
+
 \subsection{Hilbert Adjoint of Unbounded Operators}
 
-\subsection{Selected Spectral Theory Results from the Thesis}
+Let $A : D(A) \subset H_1 \rightarrow H_2,$ where $D(A)$ is densely defined in the Hilbert space $H_1.$ Fix a $w \in H_2$ and consider 
+\begin{equation}
+    F_w : D(A) \rightarrow \mathbb{C}, \qquad F_w(v) = (Av, w)_{H_2},
+\end{equation}
+which is linear as a function of $v \in D(A).$  
 
-\subsection{Injection Moduli and Types of Spectra}
+We set $D(A^*)$ to be the set of all $w$ for which the corresponding $F_w$ is bounded with respect to the $H_1$ norm. Thus, if $w \in D(A^*)$ then the map $v \mapsto (Av, w)_{H_2}$ is a bounded linear functional on the dense subspace $D(A) \subset H_1.$ 
+
+Since the bounded linear functional $F_w$ is densely defined, it can be uniquely extended to a bounded linear functional on all of $H_1,$ $\tilde F_w : H_1 \rightarrow \mathbb{C}$ (BLT theorem, why density matters). Then, on $H_1$ we can apply the Riesz Representation Theorem to say that there is a unique $u \in H_1$ such that
+\begin{equation}
+    \tilde F_w(v) = (v, u)_{H_1} \qquad \forall v \in H_1. 
+\end{equation}
+Thus, restricting back to $D(A),$ we have that 
+\begin{equation}
+    (Av, w)_{H_2} = (v, u)_{H_1} \qquad \forall v \in D(A). 
+\end{equation}
+Using this, the Hilbert adjoint of $A$ is the unique $A^*$ such that $A^*w = u.$
+
+Before moving on, we state some properties of the Hilbert adjoint (assuming $A$ is densely defined):
+
+\begin{itemize}
+    \item  $A^*$ is closed. 
+    \item $A^*$ is densely defined if and only if $A$ is closable ($A$ has a closed extension). 
+    \item If $A$ is closable, then its closure is $A^{**}.$
+    \item $R(A)^\perp = N(A^*).$
+    \item If $A$ is closed, then $R(A)^\perp = N(A)$ (infinite-dimensional analogue of the Fundamental Theorem of Linear Algebra)
+\end{itemize}
+
+\subsection{The Banach Adjoint of Bounded and Unbounded Operators}
+
+Consider the bounded operator $A : X \rightarrow Y.$ The Banach adjoint of $A$ is that operator $A^\dagger : Y^* \rightarrow X^*$ that satisfies 
+\begin{equation}
+    \langle A^\dagger f, v \rangle_{X^*, X} = \langle f, Av \rangle_{Y^*, Y},
+\end{equation}
+or $(A^\dagger f)(v) = f(Av),$
+for every $f \in Y^*$ and $v \in X.$ In other words, the Banach adjoint maps $v \mapsto f(Av).$
+
+% Now, consider an unbounded $A: D(A) \subset X \rightarrow Y.$ We want to define the Banach adjoint $A^\dagger : D(A^\dagger) \subset Y^* \rightarrow X^*$ such that for every $f \in D(A^\dagger)$ and for every $v \in D(A),$ we can write $(A^\dagger f)(v)  = f(Av).$ Of course, for any $f \in Y^*$ and for any $v \in D(A)$ we can define the map $F_f$ that maps $v \mapsto f(Av),$ i.e., $F_f(v) = f(Av).$ However, this map is not bounded in the $X$-norm, thus it is not a map from $D(A)$ to $X^*$ (not the Banach adjoint we desire). 
+
+% Instead, we want to be able to uniquely extend $F_f$ to be a bounded linear functional on all of $X^*$ (apply the BLT theorem). Then, we can identify this extension with the desired $A^\dagger f$. To do so, we define 
+% \begin{equation}
+%     D(A^\dagger) = \{ f \in Y^* : v \mapsto f(Av) \text{ is bounded} \}.
+% \end{equation}
+% Then, on this domain, we can define $A^\dagger f \in X^*$ to be the unique extension of the map $v \mapsto f(Av).$
+
+
+% Chat wrote this (edited what I wrote)
+
+Now, consider a densely defined, potentially unbounded, operator
+$A:D(A)\subseteq X\rightarrow Y$, where $X$ and $Y$ are Banach spaces.\footnote{Recall that a Hilbert space is Banach so we could have used $H_1$ and $H_2$ instead of $X$ and $ Y$.} 
+We want to define the Banach adjoint
+\[
+    A^\dagger:D(A^\dagger)\subseteq Y^*\rightarrow X^*
+\]
+such that
+\begin{equation}
+    (A^\dagger f)(v)=f(Av),
+    \qquad \forall f\in D(A^\dagger),\quad \forall v\in D(A).
+\end{equation}
+For any $f\in Y^*$, we can certainly define the linear functional
+\begin{equation}
+    F_f:D(A)\rightarrow\mathbb{C},
+    \qquad F_f(v)=f(Av).
+\end{equation}
+However, although $f$ is bounded on $Y$, the composition
+$F_f=f\circ A$ need not be bounded with respect to the $X$-norm,
+since $A$ may be unbounded.
+Furthermore, even if $F_f$ is bounded, it is only defined on $D(A)$,
+whereas an element of $X^*$ must be a bounded linear functional
+defined on all of $X$.
+
+We therefore restrict ourselves to those $f\in Y^*$ for which
+$F_f$ is bounded in the $X$-norm. This defines the domain
+\begin{equation} \label{Domain banach}
+    D(A^\dagger) = \{ f \in Y^* : v \mapsto f(Av) \text{ is bounded} \}.
+\end{equation}
+% \begin{equation}
+%     D(A^\dagger)
+%     =
+%     \left\{
+%         f\in Y^*:
+%         \exists C_f\geq 0 \text{ such that }
+%         |f(Av)|\leq C_f\|v\|_X
+%         \quad \forall v\in D(A)
+%     \right\}.
+% \end{equation}
+Then, for each $f\in D(A^\dagger)$, the density of $D(A)$ in $X$
+and the BLT theorem guarantee that $F_f$ admits a unique
+bounded linear extension
+\begin{equation}
+    \widetilde F_f:X\rightarrow\mathbb{C}.
+\end{equation}
+Since $\widetilde F_f\in X^*$, we define the Banach adjoint via
+\begin{equation}
+    A^\dagger f=\widetilde F_f,
+\end{equation}
+so that
+\begin{equation}
+    (A^\dagger f)(v)=f(Av)
+    \qquad \forall v\in D(A).
+\end{equation}
+
+% we can form the map $v \mapsto f(Av)$ for some $v \in D(A).$ However, this map need not be bounded in the $X$ norm because $A$ is not bounded. Thus, as was the case with the Hilbert adjoint, we restrict the domain of the Banach adjoint to the $f$ for which $v \mapsto f(Au)$ is bounded. That is,
+% \begin{equation}
+%     D(A^\dagger) = \{ f \in Y^* : u \mapsto f(Au) \text{ is bounded }\}.
+% \end{equation}
+% With this, the Banach adjoint can be defined as before, i.e., via $(A^\dagger f)(u) = f(Au).$
+
+
+\subsection{Relating Hilbert and Banach Adjoints}
+
+Let $A : D(A)\subset H_1 \rightarrow H_2$ be a densely defined operator, where $H_1$ and $H_2$ are Hilbert spaces. Using the Riesz Representation Theorem for each Hilbert space, we can define the Riesz maps:\footnote{Note that in \Cref{Riesz}, the Riesz map was taken to map $H^*$ to $H.$ This is a matter of taste. If you would like, you can think of the `Riesz map' of this section as the `inverse Riesz map' of \Cref{Riesz}.}
+\begin{equation}
+    R_i : H_i \rightarrow H_i^*, \qquad \langle R_i w, v \rangle_{H_i^*, H_i} = (v, w)_{H_i}.
+\end{equation}
+
+Let's fix a $w \in D(A^*) \subset H_2$ and consider $R_2 w \in H_2^*.$ By the definition of the Banach adjoint, 
+\begin{equation}
+    \langle A^\dagger R_2 w , v \rangle_{H_1^*, H_1} = \langle R_2 w, Av \rangle_{H_2^*, H_2}.
+\end{equation}
+Then, by the definition of the Riesz map,
+\begin{equation}
+    \langle A^\dagger R_2 w , v \rangle_{H_1^*, H_1} = \langle R_2 w, Av \rangle_{H_2^*, H_2} = (Av, w)_{H_2}.
+\end{equation}
+By the definition of the Hilbert adjoint,  $(Av, w)_{H_2} = (v, A^*w)_{H_1}.$ Thus, 
+ \begin{equation}
+    \langle A^\dagger R_2 w , v \rangle_{H_1^*, H_1} = (v, A^*w)_{H_1}.
+\end{equation}
+Applying the Riesz map $R_1,$ we have that
+\begin{equation}
+    (v, A^*w)_{H_1} = \langle R_1 A^* w, v \rangle_{H_1^*, H_1}. 
+\end{equation}
+Thus, 
+\begin{equation}
+     \langle A^\dagger R_2 w , v \rangle_{H_1^*, H_1} = \langle R_1 A^* w, v \rangle_{H_1^*, H_1}
+\end{equation}
+and we have that 
+\begin{equation}
+    A^\dagger R_2 = R_1 A^*
+\end{equation}
+or
+\begin{equation}
+    A^* = R_1^{-1} A^\dagger R_2.
+\end{equation}
+
+Furthermore, we have that when $w \in D(A^*),$ the map $v \mapsto (Av, w)$ is bounded for every $v \in D(A)$. Using this $R_2$ Riesz map, this is equivalent to saying that $\langle R_2 w, Av \rangle_{H_2^*, H_2}$ is bounded, or that $R_2 w$ is in $D(A^\dagger)$ (take $f = R_2 w$ in \Cref{Domain banach}). Thus, we have that
+\begin{equation}
+    D(A^\dagger) = R_2 D(A^*).
+\end{equation}
+
+\subsubsection{What Happens in Finite Dimensions?}
+
+In finite dimensions, every space is closed. Thus, $D(A) = H_1.$ Furthermore, every linear operator on a finite-dimensional normed space in bounded \cite[Theorem 2.7-8]{krey}. Thus, $D(A^*) = H_2$ and $D(A^\dagger) = H_2^*.$ 
+
+Let's take $H_1 = \mathbb{C}^n$ and $H_2 = \mathbb{C}^m.$ Recall that linear operators on finite-dimensional
+spaces can be represented in terms of matrices. Thus, we can think of $A$ as an $m \times n$ matrix.\footnote{For more details, see \cite[Section 2.9]{krey}.} Furthermore, we can think of linear functionals that map from $\mathbb{C}^n$ to $ \ mathbb {C} $ as $1 \times n$ matrices (row vectors). 
+
+Consider the functional $f \in (\mathbb{C}^{m})^*.$ Let's say that the row vector that represents $f$ is $c^T.$ Then
+\begin{equation}
+    (A^\dagger f)(v) = f(Av) = c^T (Av) = (A^T c)^T v.
+\end{equation}
+Thus, the vector representation of $A^\dagger f$ is $A^T c.$
+In this way, the Banach adjoint can be thought of as the matrix transpose. 
+
+Similarly, let $B$ be the matrix representation of $A*.$ We have that $(Av, w) = (Av)^T \overline y = v^T A^T \overline y.$ Furthermore, $(v, A^*w) = x^T \overline B \overline y.$ Since $(Av, w) = (v, A^*w),$ we have that $B = \overline A ^T.$ In this way, the Hilbert adjoint can be thought of as the conjugate transpose of the matrix representation of $A$.\footnote{The discussion of this section is discussed in more detail in \cite[Section 4.5]{krey}.}
+
+
+% for $H_2 = \mathbb{C}^M$, $(Av, w)_{H_2} = \overline w^T Av$ and $(v, u) = \overline{u}^T v.$ Thus,   $\overline{u}^T = \overline w^T A$ or $u = \overline A^T w.$ In this way, the Hilbert adjoint can be thought of as the conjugate transpose of the matrix representation of $A$.\footnote{The discussion of this section is discussed in more detail in \cite[Section 4.5]{krey}.}
+
+\section{Selected Spectral Theory Results from the Thesis}
+
+
+
+\subsection{What Does a Zero Injection Modulus Mean?}
+
+Recall the definition of the injection modulus of a closed and densely defined $A: D(A) \subset H \rightarrow H,$ 
+\begin{equation} \label{inject}
+    \sigma_{\inf}(A) = \inf\{ \|Ax\|_H : x \in D(A), \|x\|_H = 1\}.
+\end{equation}
+If $\sigma_{\inf}(A) = c > 0$ then $\|Ax\| \ge c \|x\|$ for every $x \in D(A).$ Thus, $Ax = 0$ implies that $x=0.$ Hence, a positive injection modulus indicates that the operator is injective.
+
+In finite dimensions, the unit sphere is compact. Thus, the minimum of $\|Ax\|$ on the unit sphere is attained at the smallest singular value of $A.$ However, in infinite dimensions, the infimum need not be attained at any $x \in D(A).$ This gap between finite and infinite dimensions is what allows an infinite-dimensional operator to be injective but have a zero injection modulus. For example, consider the operator $Ae_n = \frac{1}{n} e_{n+1},$ which is a bounded operator on $H = \ell^2(\mathbb{N}.$ This operator is injective but has a zero injection modulus because $\|Ae_n\| = \frac{1}{n} \rightarrow 0$ as $n$ increases.
+
+
+\subsection{Injection Modulus and Types of Spectral Points}
+
+
+If $z \in \mathbb{C}$ is in the point spectrum, then $A-zI$ is not injective. Thus, $\sigma_{\inf}(A-zI) = 0.$
+Furthermore, if $z$ is in the continuous spectrum of $A$ then $R(A-zI)$ is dense in $H.$ Thus $\overline{R(A-zI)} = H$ and $N(A^*-\overline z I) = \{0\}.$ Assume that $\sigma_{\inf}(A-zI) = c > 0.$ Then, by definition, $\|(A-zI) x \| \ge C \|x\|.$ Take a sequence $(x_n) \subset D(A)$ and define $y_n \defeq (A-zI) x_n.$ Suppose that $y_n \rightarrow y.$ Since $(y_n)$ is a Cauchy sequence, we have that $\| y_n - y_m \| = \| (A-zI) (x_n - x_m) \| \ge  C \| x_n - x_m \|$ for sufficently large $m, n.$ Thus, $(x_n)$ is  Cauchy sequence and $x_n \rightarrow x.$ Since $(A-zI)$ is closed, we know that $x_n \in D(A),$ $x_n \rightarrow x,$ and $(A-zI) x_n \rightarrow y$ implies that $x \in D(A)$ and $(A-zI)x = y.$ Thus, $y = R(A-zI).$ However, this would mean that $R(A-zI) = \overline{R(A-zI)} = H$ which is a contradiction ($z$ in continuous spectrum). Thus, if $z$ is in the continuous spectrum, we must have that $\sigma_{\inf}(A-zI) = 0.$ 
+
+Notice that the converse result is not true. That is, $\sigma_{\inf}(A-zI) = 0$ does not imply that $z$ is in the point of continuous spectrum. This is because $\sigma_{\inf}(A-zI)=0$ could mean that $z$ is in the residual spectrum. To see this, consider the operator $Ae_n = \frac{1}{n} e_{n+1},$ which is a bounded operator on $H = \ell^2(\mathbb{N}.$ This operator is injective but has a zero injection modulus ($\|(A-zI)e_n\| = \|Ae_n\| = \frac{1}{n} \rightarrow 0$ as $n$ increases). Notice that $(Ax, e_1) = 0$ because $Ax = x_1 e_2 + (x_2/2) e_3 + \dots.$ Thus, $e_1 \in R(A)^\perp = N(A^*).$ Hence, $\overline{R(A)} \ne H,$ implying that $z=0$ is in the residual spectrum of $A.$
+
+To account for this mismatch, we introduce the injection modulus of the adjoint operator, $\sigma_{\inf}(A^* - \overline zI).$ When $z$ is in the residual spectrum, $N(A^* - \overline z I)$ is nontrivial. Thus, $A^* - \overline z I$ is not injective and  $\sigma_{\inf}(A^* - \overline zI) = 0.$
+
+
+\subsection{Why Closed Operators?}
+
+Suppose that $A : D(A) \subset H \rightarrow H$ is not closed. Then, there exists a sequence $(x_n) \subset D(A),$ $x \in H,$ and $y \in H$ such that $Ax_n \rightarrow y$ and $x_n \rightarrow x$ but $x \notin D(A)$ and $Ax \ne y.$ Suppose (for sake of contradiction) that $z \notin \Sp{A}.$ Then $A-zI$ has a bounded inverse. Since $(A-zI)x_n \rightarrow y - zx,$ we have that $x_n \rightarrow (A-zI)^{-1}(y-zx).$ Thus, $x = (A-zI)^{-1}(y-zx)$ or $(A-zI) x = y - zx.$ However, this implies that $x \in D(A)$ and $Ax=y,$ which is a contradiction. Thus, if $A$ is not closed, every $z \in \mathbb{C}$ must be in $\Sp{A}.$ That is why we only study the spectrum of closed operators!
+
+\subsection{Why is the Spectrum Closed?}
+
+First, we recall the crucial result from \cite{Nick}:
+\begin{theorem}[Invertibility and Perturbation of Closed Operators {\cite[Theorem 4.1]{Nick}} {\cite[Exercise 1.17]{Matt}}]\label{first stable}
+    Let $A:D(A) \subset H \rightarrow H$ be a closed and densely defined operator such that $0 \notin \Sp{A}.$ Let $B$ be a bounded operator on $H$ such that $\|B\|\| A^{-1} \| < 1.$ Then $0 \notin \Sp{A+B}$ and 
+    \begin{equation}
+        \| (A+B)^{-1}\| \le \frac{\|A^{-1}\|}{1 - \|B\|||A^{-1}\|}.
+    \end{equation}
+\end{theorem}
+\begin{proof}
+    Recall that for a bounded operator $C,$ if $\|C\| < 1 $ then, by Neumann series, $I-C$ is invertible and $\| (I-C)^{-1} \| \le (1 - \|C\|)^{-1}$ \cite[Page 30]{kato}. In this setting, set $C = -BA^{-1}.$ Then $\|C^{-1}\| \le \|B\|\|A^{-1} \| < 1.$ Setting $S = (I-C)^{-1},$ Neumann series tells us that $S = \sum_{n=0}^{\infty} C^n.$ Thus, by geometric series,
+    \begin{equation} \label{S eqn}
+        \|S\| \le \sum_{n=0}^{\infty} \|C\|^n = \frac{1}{1-\|C\|} \le \frac{1}{1 - \|B\|\|A^{-1}\|}.
+    \end{equation}
+Now, let $D = A^{-1}S.$ Notice that $D$ is bounded and 
+\begin{equation}
+    (A+B)D = (I + BA^{-1})S = (I+BA^{-1})(I - C)^{-1} = (I+BA^{-1})(I+BA^{-1})^{-1} = I.
+\end{equation}
+Similarly, 
+\begin{equation}
+   D(A+B) = A^{-1}S(A+B) =  A^{-1}S(I+BA^{-1})A = I.
+\end{equation}
+Thus, $D$ is the bounded inverse of $A+B.$ Furthermore, by \Cref{S eqn},
+\begin{equation}
+    \|(A+B)^{-1} \| = \|D\| \le \|A^{-1}\|\|S\|\le \frac{\|A^{-1}\|}{1 - \|B\|\|A^{-1}\|},
+\end{equation}
+as desired!
+\end{proof}
+
+Using this, we can show that the spectrum of a closed and densely defined operator is closed. To do so, we first consider $z \notin \Sp{A}.$ Then, we consider a $\tilde z$ such that $|z-\tilde z| < \| (T-zI)^{-1}\|^{-1}.$ Then,
+\begin{equation}
+    T - \tilde z I = T - zI + (z - \tilde z) I \defeq T-zI + S.
+\end{equation}
+Notice that this $S$ is a valid $B$ in \Cref{first stable}. Thus, $T-zI + S$ has a bounded inverse and $\tilde z \notin \Sp{A}.$ This tells us that around each $z \notin \Sp{A}$ there is an open ball $|z-\tilde z| < \| (T-zI)^{-1}\|^{-1}$ that is also outside of the spectrum. Thus, $\mathbb{C} \setminus \Sp{A}$ is open, and so $\Sp{A}$ is closed. 
+
+
+\subsection{Resolvent Norm and the Distance to the Spectrum}
+
+Let $z \in \Sp{A},$ then $\gamma(z, A) \defeq \| (A-zI)^{-1} \|^{-1} = 0.$ Recall (from the thesis) that $\gamma(w, A)$ is $1$-Lipschitz. Thus, 
+\begin{equation}
+     | \gamma(w, A) - \gamma(z, A)  =  \gamma(w, A)  \le | w - z |.
+\end{equation}
+Taking the infimum, we find that
+\begin{equation}
+    \gamma(w, A) \le \operatorname{dist}(w, \Sp{A}).
+\end{equation}
+
+
+Now, assume that $A$ is a normal operator. Then, we have that
+\begin{theorem}[Inverse Resolvent Norm of Normal Operator {\cite[Exercise 1.8]{Matt}}]
+    \begin{equation}
+        \gamma(w, A) = \operatorname{dist}(w, \Sp{A}).
+    \end{equation}
+\end{theorem}
+\begin{proof}
+Take $z \notin \Sp{A}$ ($z \in \Sp{A}$ case is trivial) and let $T = A-zI.$ Notice that $T$ is normal and that $\Sp{T} = \Sp{A} - z.$ Thus, $\operatorname{dist}(0, \Sp{T}) = \operatorname{dist}(z, \Sp{A}).$ Thus, we can equivalently show that $\|T^{-1}\| = \operatorname{dist}(0, \Sp{T}).$ With this in mind, we will rename $T$ as $A$ and show that $\|A^{-1}\| = \operatorname{dist}(0, \Sp{A}).$ 
+
+Notice that
+\begin{equation} \label{factor}
+    \Sp{A^{-1}} \setminus \{0\} = \{ z^{-1} : z \in \Sp{A} \}.
+\end{equation}
+To see this, notice that for $w \ne 0,$
+\begin{equation}\label{decomp}
+    A^{-1} - w I = w( w^{-1} I - A)A^{-1}.
+\end{equation}
+Assume that $w^{-1} \notin \Sp{A}.$ Then $A-w^{-1}I$ is boundedly invertible. Thus, we can invert both sides of \Cref{decomp} and write
+\begin{equation}
+    (A^{-1} - wI)^{-1} = \frac{-1}{w} A (A-w^{-1} I)^{-1}.
+\end{equation}
+Since $A = (A-w^{-1}I) + w^{-1} I,$ we have that
+\begin{equation}\label{decomp2}
+    (A^{-1} - wI)^{-1} = -\frac{1}{w} [ (A-w^{-1} I) + w^{-1} I] (A-w^{-1} I)^{-1} = -\frac{1}{w} [ I + w^{-1}(A-w^{-1}I)^{-1}].
+\end{equation}
+Since the right-hand-side of \Cref{decomp2} is bounded, $(A^{-1} - wI)^{-1}$ is bounded. Thus, if $w^{-1} \notin \Sp{A},$ then $w \notin \Sp{A^{-1}}.$ Taking the contrapositive, we have that if $w \in \Sp{A^{-1}},$ then $w^{-1} \notin \Sp{A}.$
+Now, assume that $w \notin \Sp{A^{-1}}.$ Then $A^{-1} - wI$ is boundedly invertible. Since 
+\begin{equation}
+    (A-w^{-1}I) = -w^{-1}(A^{-1} - wI) A,
+\end{equation}
+we have that 
+\begin{equation}\label{decomp3}
+    (A-w^{-1}I)^{-1} = -w A^{-1} (A^{-1} - wI)^{-1}.
+\end{equation}
+Since the right-hand-side of \eqref{decomp3} is bounded, $w^{-1} \notin \Sp{A}.$ Taking, the contrapositive, we have that if $w^{-1} \in \Sp{A},$ then $w \in \Sp{A^{-1}}.$
+
+Recall that for a bounded normal operator $B$, 
+\begin{equation}
+    \| B \| = \sup_{z \in \Sp{B}} |z|.
+\end{equation}
+Thus, we have that 
+\begin{equation}
+    \|A^{-1} \| = \sup_{z \in \Sp{A^{-1}}} |z|.
+\end{equation}
+Since $\| A^{-1} \| > 0$ (the inverse cannot be zero operator), we have that
+\begin{equation}
+    \|A^{-1} \| = \sup_{z \in \Sp{A^{-1}}} |z| = \sup_{z \in \Sp{A^{-1}} \setminus \{0\}} |z|.
+\end{equation}
+Using \Cref{factor}, we have that
+\begin{equation}
+    \|A^{-1} \| = \sup_{z \in \Sp{A^{-1}}} |z| = \sup_{z \in \Sp{A^{-1}} \setminus \{0\}} |z| = \sup_{z \in \Sp{A}} \frac{1}{|z|} = \frac{1}{\operatorname{dist}(0, \Sp{A})},
+\end{equation}
+which is the desired result.
+% Assume that $A^{-1} - wI$ is boundedly invertible. Thus, $R(A^{-1} - wI) = H$ (by definition of bounded invertibility) and $N(A^{-1} - wI) = \{0\}$ (because injectivity is necessary condition for invertibility).  Furthermore, using \Cref{factor} we have that $R(w^{-1} I - A) = H.$ Consider an $x \in N(w^{-1}I - A).$ By applying $A^{-1} - wI$ to $Ax,$ it becomes clear that $Ax \in N(A^{-1} - wI).$ However, since $A$ is invertible, this $x$ must be zero
+
+\end{proof}
+
+
+
+\subsection{Relating Spectrum of $A$ and $A^*$}
+
+\begin{theorem}[Relating $\Sp{A}$ and $\Sp{A^*}$]
+    Let $A$ be closed and densely defined. We have that
+    \begin{equation}
+        \Sp{A^*} = \{ \overline z : z \in \Sp{A}\}
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    We first assume that $z \notin \Sp{A}.$ Then $B \defeq (A-zI)^{-1}$ is bounded. Let $v = B^* y$ for some $y \in H.$ For every $u \in D(A)$ we have that 
+\begin{equation}
+    ((A-zI)u,v) = ((A-zI)u, B^*y) = (B(A-zI)u, y) = (u, y).
+\end{equation}
+Thus, $(A-zI)^* v = y$ and $v \in D(A^*).$ In particular, we have found that for any $y\in H$ there is a $v \in D(A^*)$ for which $(A-zI)^* v = y.$ Thus, $(A-zI)^*$ is surjective. Furthermore, since $R(A-zI) = H,$ we know that $N((A-zI)^*) = \{0\}.$ Thus, $(A-zI)^*$ is injective. As a result, $(A-zI)^*$ is bijective and has inverse $B^*.$ Since $B$ is bounded, $B^*$ is bounded. Thus, $(A-zI)^*$ is boundedly invertible and $\overline z \notin \Sp{A^*}.$
+
+For the other direction, recall that since $A$ is closed, $A = A^{**}.$ Using our previous argument, we have that if $\overline z \notin \Sp{A^*},$ then $z \notin \Sp{A^{**})}.$ 
+
+Combining these two results, we have that $z \notin \Sp{A}$ if and only if $\overline z \notin \Sp{A^*}.$ Thus, $z \in \Sp{A}$ if and only if $\overline z \in \Sp{A^*}.$
+\end{proof}
+% We want to show that $\Sp{A^*} = \{ \overline z : z \in \Sp{A}\}.$ To do so, we first assume that $z \notin \Sp{A}.$ Then $B \defeq (A-zI)^{-1}$ is bounded. Let $v = B^* y$ for some $y \in H.$ For every $u \in D(A)$ we have that 
+% \begin{equation}
+%     ((A-zI)u,v) = ((A-zI)u, B^*y) = (B(A-zI)u, y) = (u, y).
+% \end{equation}
+% Thus, $(A-zI)^* v = y$ and $v \in D(A^*).$ In particular, we have found that for any $y\in H$ there is a $v \in D(A^*)$ for which $(A-zI)^* v = y.$ Thus, $(A-zI)^*$ is surjective. Furthermore, since $R(A-zI) = H,$ we know that $N((A-zI)^*) = \{0\}.$ Thus, $(A-zI)^*$ is injective. As a result, $(A-zI)^*$ is bijective and has inverse $B^*.$ Since $B$ is bounded, $B^*$ is bounded. Thus, $(A-zI)^*$ is boundedly invertible and $\overline z \notin \Sp{A^*}.$
+
+% For the other direction, recall that since $A$ is closed, $A = A^{**}.$ Using our previous argument, we have that if $\overline z \notin \Sp{A^*},$ then $z \notin \Sp{A^{**}}.$ 
+
+% Combining these two results, we have that $z \notin \Sp{A}$ if and only if $\overline z \notin \Sp{A^*}.$ Thus, $z \in \Sp{A}$ if and only if $\overline z \in \Sp{A^*}.$
+
+
+\subsection{Equivalent Pseudospectra Defintions}
+
+Recall the following result.
+
+\begin{theorem}
+    Let $A:D(A) \subset H \rightarrow H$ be a closed and densely defind operator. We have the following equivalence:
+    \begin{equation}
+        \Spe{A} \defeq \operatorname{Cl}\left( \left\{ z \in \mathbb{C} : \gamma(z, A) < \epsilon  \right\} \right) =  \operatorname{Cl} \left( \bigcup_{E \in \mathcal{B}(H), \|E\|_{\mathcal{B}(H)} < \epsilon} \operatorname{Sp}(A+E) \right)
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    First, suppose that $z \in \bigcup_{E \in \mathcal{B}(H), \|E\|_{\mathcal{B}(H)} < \epsilon} \operatorname{Sp}(A+E).$ For ease of notation, let $B \defeq A-zI.$ Suppose that $\|B^{-1}\|^{-1} \le 1/\epsilon,$ which implies that $z \notin \Sp{A}.$ Then, $\|EB^{-1} \| \le \|E\|\|B^{-1} \| = 1.$ Since $B+E (!+EB^{-1})B$ and $\|EB^{-1}\| < 1,$ we can apply a Neumann series asrgument  to infer that $I + EB^{-1}$ is boundedly invertible. Thus, $B+E$ is the product of two boundedly invertible operators, making it a boundedly invertible operator itself. As a result, we have that $B + E = (A+E)-zI$ is boundedly invertible and that $z \notin \Sp{A+E}.$ However, this is a contradiction. Thus, we must have that $\|B^{-1}\| > 1/\epsilon,$ which implies that $z \in \Spe{A}.$
+
+    For the other direction, suppose that $z \notin \Sp{A},$ which implies that $B$ is boundedly invertible. Further suppose that $\|B^{-1}\| > 1/\epsilon,$ i.e., that $z \in \Spe{A}.$ Recall that (proved below), 
+    \begin{equation}
+        \|B^{-1} \|^{-1} = \min \{ \sigma_{\inf}(B), \sigma_{\inf}(B^*) \}.
+    \end{equation}
+    Using the fact that $\sigma_{\inf}(B) = \inf_{\|x\| = 1} \|Bx\| / \|x\|$ and by setting $y = Bx,$ we have that 
+    \begin{equation}
+        \sigma_{\inf}(B) = \inf_{y} \frac{\|y\|}{ \|B^{-1}y \|} = \left(  \sup_y \frac{\|B^{-1} y \|}{ \| y \| }\right)^{-1} = \frac{1}{\|B^{-1} \|}.
+    \end{equation}
+    Similarly, 
+    \begin{equation}
+        \sigma_{\inf}(B^*) = \frac{1}{\|(B^*)^{-1}\|} = \frac{1}{\|(B^{-1})^*\|}.
+    \end{equation}
+    Since $\|B\| = \|B^*\|,$ we have that $\sigma_{\inf}(B) = \sigma_{\inf}(B^*) = \|B^{-1}\|^{-1} < \epsilon.$ Since $\sigma_{\inf}(B) < \epsilon,$ we know that there must be some unit vector $x$ such that $\|Bx\| < \epsilon.$\footnote{Suppose this were not the case. Then $\|Bx\| \ge \epsilon$ for every admissable $x.$ Since $\sigma_{\inf}(B)$ is the greatest lower bound for $\|Bx\|,$ and $\epsilon$ is a lower bound for $\|Bx\|,$ we would have that $\sigma_{\inf}(B) \ge \epsilon.$ This is a contradiction. Thus, there must be some $x$ for which $\|Bx\| < \epsilon.$ }
+    Set $y = (A-zI)x$ for such $x.$ Then $\|y\| < \epsilon.$ Furthermore, set our canddiate $E$ so that $Ex = -(u, x)y$ for any $u \in H.$ Then, $Ex = -y$ and $\|E \| = y.$\footnote{Recall that $\|E\| = \sup_{\|u\|=1} \|Eu\|.$ Notice that $\|Eu\| = |(u, x)|\|y\| \le \|u\| \|x\| \|y\| = \|y\|.$ Now, take $u=x$ and find that, since $\|E\|$ is the supremum over any admissable $u,$ $\|E\| \le \|Ex\| = \|y\|.$ Thus, $\|E\| = \|y\|.$} 
+    Thus, $E$ is a valid perturbation. Since $(A-zI)x=y$ and $Ex=-y,$ we have that
+    \begin{equation}
+        (A+E-zI)x = (A-zI)x + Ex = y-y=0.
+    \end{equation}
+    Since $x \ne 0,$ we can conclude that $z$ is an eigenvalue of $A+E.$ Thus, $z \in \Sp{A+E}$ for our chosen $E.$ As a result, $z \in \bigcup_{E \in \mathcal{B}(H), \|E\|_{\mathcal{B}(H)} < \epsilon} \operatorname{Sp}(A+E).$
+
+    Overall, we have shown that 
+    \begin{equation}
+        \left\{ z \in \mathbb{C} : \gamma(z, A) < \epsilon  \right\} = \bigcup_{E \in \mathcal{B}(H), \|E\|_{\mathcal{B}(H)} < \epsilon} \operatorname{Sp}(A+E).
+    \end{equation}
+    Taking the closure, we get the desired result. 
+    
+
+\end{proof}
+
+
+
+
+\subsection{Inverse Resolvent Norm and Injection Moduli}
+
+See \cite[Lemma 1.2.5]{Matt} for more details. I hope to fill this section soon. 
+
+
+
 
 
 
