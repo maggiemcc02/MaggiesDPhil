@@ -92,7 +92,7 @@
 %   label=\textcolor{\currentheadingcolor}{\textbullet}
 % }
 
-\title{\textbf{Notes for week 2 MT 2026}}
+\title{\textbf{Notes and Logs for Week 2 MT 2026}}
 \author{}
 \date{}
 % \author{Maggie McCarthy}
@@ -101,6 +101,113 @@
 \begin{document}
 
 \maketitle
+
+
+\section{Questions/Comments for Meeting October 23}
+
+\textbf{What have I been up to}
+
+\begin{itemize}
+
+    \item For the first few days of last week I typed up some extra notes/proofs for some topics I still feel a bit iffy about in the thesis.   
+    \item Mainly, I have been working on the extension of the Rognes and Logg localisation (see seperate note). I met with Pablo to talk about it. He directed me to a paper. I decided to backtrack and learn more about the role and choices of bubbles and cones for efficiency proofs. I spent most of last week working through the Veruth (96) paper which is the first place the biharmonic equation is handled. I then spent a little (need more) time on a Carstenson paper, which takes a slightly different approach. 
+    \item On Monday I met with with Umberto. We discussed the $C^1$ extension. We both agree that some version of Cartsensen's bubble may be what we need. He suggested I get Chat/Claude to code it up. I did this and was very confused on the result. Thus, I decided to take a step back and work through the implementation myself. This is what I have been focused on this week. 
+    \item To work towards an implementation, I started by analyzing Pablo's general implementation to make sure I understand exctly what is going on. This raised some issues I am still confused on. In particular, to my understanding, Pablo's \texttt{FacetBubble} test function is equivalent to Rognes and Logg's test function on a particular facet. However, it differs on the whole cell. I am unsure of the impact of this discrepency and what that means for my even more rogue extension of it. 
+    \item I want the simplest implementation on top of what Pablo has. To achieve this, I iterated with Chat and found an implementation that is equivalent to Carstensen's bubble/cone up to a multiplicative constant (that should not matter). 
+    \item I implemented a first, super simple, manufactured solution example to check the localisation.
+    \item However, I am still very unsure if this is the right route for (at least) the following reasons:
+    \begin{itemize}
+        \item I do not think I have spent enough time with the literature and with this idea to feel confident in it yet. There are details I am still iffy about. 
+        \item  There is a potential error propogation issue in solving the three sequential local problems. Rognes and Logg do not discuss this, they prove their result in the case where the polynomial spaces capture the residuals perfectly. They claim that if that is not the case, then their method computes the bubble-weighted projections of the exact residuals. Is that true though? Is there not error propogation in their approach? I know there is in my proposed approach! 
+        \item I am unsure of what $Q_{\text{test}}$ looks like on the whole cell in Pablo's implementation and in my extension. What sort of impact will this gap between theory and implementation have on the validity of the method? 
+        \item Rognes and Logg's method is quite general because it applies to a general simplex. Does mine? I think so but I need to double-check. 
+        \item Maybe there is a better choice out there in literature. I have not spent much time with the Cao et. al paper (Pablo gave me) because it seems a bit more complicated then we need, but maybe there is something there. 
+    \end{itemize}
+    
+    \item I have been sporadically iterating with Chat on a thesis draft. The goal is mainly structure because I hate how Chat writes and I like to write, so I want to write it myself. On a positive note, without the planned extensions ($C^1$ localisation, more examples, maybe more theory) we seem to hit the 20 page mark (SISC format). What are my next steps here?
+    % I also iterated with chat on converting the thesis to a paper. I believe it will hit the 20-page mark, especially once we add more examples, the Fredholm analysis, and the $C^1$ localisation. I am still confused about what the structure of the paper will be. How much background? 
+\end{itemize}
+
+
+\textbf{Academic Questions}
+
+\begin{itemize}
+    \item Localisation Questions:
+    
+    I am still unsure if my proposed $C^1$ localisation approach is the right one. I have the following reasons and questions:
+    \begin{itemize}
+    \setlength{\itemsep}{0.5em}
+        \item I do not think I have spent enough time with the literature and with this idea to feel confident in it yet. There are details I am still iffy about. 
+        
+        \item  There is a potential error propogation issue in solving the three sequential local problems. Rognes and Logg do not discuss this, they prove their result in the case where the polynomial spaces capture the residuals perfectly. They claim that if that is not the case, then their method computes the bubble-weighted projections of the exact residuals. Is that true though? Is there not error propogation in their approach? I know their is in my proposed approach! 
+        \item I am unsure of what $Q_{\text{test}}$ looks like on the whole cell in Pablo's implementation and in my extension. What sort of impact will this gap between theory and implementation have on the validity of the method? 
+        \item Rognes and Logg's method is quite general because it applies to a general simplex. Does mine? I think so but I need to double-check. 
+        \item Maybe there is a better choice out there in literature. I have not spent much time with the Cao et. al paper (Pablo gave me) because it seems a bit more complicated then we need, but maybe there is something there. 
+    \end{itemize}
+
+ \item Paper questions:
+    \begin{itemize}
+    \setlength{\itemsep}{0.5em}
+        \item What audience/structure are we going for? Umbert said that if it is mainly numerics, we should go for SISC. If instead we plan to work more on the numerical analysis, convergence proof etc, he suggested SINUM. FInally, if we want to combine together you can go to FoCM or MathComp. 
+        \item How much background (spectral theory, FE theory, Babuska Osborn, Matt theory, etc) do we want? 
+        \item What story do we want to tell about variational folding? Do we want the counterexample? 
+        \item How much Fredholm operator theory if any? How much Babuska Osborn if any? I think Umberto made it seem like this would be more of a numerically-focused paper and that we would dive deeper into some of the theory in a later paper, i.e., not Fredholm theory, etc. 
+        \item Mike Giles addition, $C^1$ localisation, etc.
+        \item Do we need a Lipschitz proof? 
+        \item Do we need self-adjoint simplifications?
+        \item What from the Maxwell example? Do we want to show pollution and inner loop results? 
+        \item Still may want to dive further into the deterioration of the results.
+        \item Based on the current (bad) draft, what are the next steps? To fill in the gaps in the paper and then later write it up? 
+    \end{itemize}
+\end{itemize}
+
+\textbf{Administrative Questions}
+
+\begin{itemize}
+    \item Struggling with the adjustment alot - I need to get used to balancing everything and its hard to feel good about my progress in that setting. 
+    \item Is Matt visiting? 
+    \item Conferences:
+    \begin{itemize}
+    \setlength{\itemsep}{0.5em}
+        \item Milan abstract submission Dec 31.
+        \item Gene Golub due early in the new year. It requires a statement, CV, reference letter. Could Patrick be my reference?
+        \item EFEF - how does it work? Do attendees have to speak? 
+        \item ICMS - I think I will apply. It asks if we need accomodation support (and they say 'if you have access to your own funding, we would be grateful if you could use it.').  Is it ok for my to ask for it? I have very limited funding. 
+        \item ENUMATH - should I be going? 
+    \end{itemize}
+\end{itemize}
+
+
+
+
+\newpage
+
+
+\section{Running To-Do Lists}
+
+\textbf{Academic}
+
+\begin{itemize}
+    \item Implement and test a $C^1$ localisation.
+    \item Umberto gave me some references for the proper way to handle normal traces when dealing with the bilaplacian. I want to spent a few hours with these because I have not seen those arguments before. 
+    \item More work on a draft. I hate Chat's writing so I will want to start over myself. 
+    \item Work through the counter examples from Umberto. 
+    \item Umberto sent me some slides that may be related to our variational formulation of Matt's algorithm. I still need to go through them. 
+    \item Tests for Mike Giles.
+    \item More examples. 
+    \item Code clean up, MPI/GIT learning/review. 
+    \item Lot's of more topics to dive into (below). 
+\end{itemize}
+
+\textbf{Administrative}
+
+\begin{itemize}
+    \item Prep for teaching.
+    \item Interview training courses and right to work. 
+    \item ICMS application.
+    \item Other applications (specifically Gene Golub). 
+\end{itemize}
+
 
 \section{Meeting Notes October 19 (with Umberto)}
 
@@ -113,7 +220,7 @@
 
 
 
-
+\newpage
 
 
 \section{Questions/Comments for Meeting October 19}
@@ -170,6 +277,7 @@
     \item More examples
 \end{itemize}
 
+\newpage
 
 \section{Notes on Localisation}
 
@@ -334,7 +442,7 @@ Finally, for the other facet term, we take $v = (\beta_S^T)^2\phi_i,$ where $\ph
 
 % Make a chart comparing Veruth, Carstenson, and Pablo's paper. Does any option work right for us? 
 
-
+\newpage
 
 \section{Running To-Do List For This Week}
 
@@ -366,7 +474,7 @@ Finally, for the other facet term, we take $v = (\beta_S^T)^2\phi_i,$ where $\ph
 \end{itemize}
 
 
-
+\newpage
 \section{Logs}
 
 
@@ -385,25 +493,33 @@ Finally, for the other facet term, we take $v = (\beta_S^T)^2\phi_i,$ where $\ph
 \textbf{Monday}
 
 \begin{itemize}
-    \item 
+    \item Meeting with Umberto.
+    \item Class 11-1
+    \item Worked on meeting notes.
+    \item Worked on localisation code (nothing yet).
 \end{itemize}
 
 \textbf{Tuesday}
 
 \begin{itemize}
-    \item
+    \item Worked more on localisation. I had a good bit of trouble understanding the FB and B spaces in FIAT and the test functions therein. 
+    \item Attended SIAM student chapter seminar and lunch.
 \end{itemize}
 
 \textbf{Wednesday}
 
 \begin{itemize}
-    \item
+    \item Working more on understanding the localisation process (particulaly its implementation).
+    \item Ran into a potential problem towards the end of the day. In Pablo's Rognes and Logg implementation, he tests the full residual against Qtest. On the full cell, this Qtest includes more directions than the Rognes and Logg test function. Luckily, these extra diections do not contribute anything and are `canceled out' by the fact that Rcell solves the relevant local problem for which these extra directions are valid test functions for. This does not seem to be the case for our third test problem. When we consider $(\lambda_1 \lambda_2)$Qtest, we get $(\lambda_1\lambda_2)^2 \phi_i$ on the facet but we do not get the same cancellation from $R_T$ and $R_{\partial T}^1$ on the full cell. This is something I need to dive deep into. (yikes)
 \end{itemize}
 
 \textbf{Thursday}
-
 \begin{itemize}
-    \item 
+    \item Today was a seminar day so busy.
+    \item I continued trying to understand the $C^1$ localisation and its implementation. My focus was on formalising my thoughts so that I could discuss them in a meeting. When I ended yesterday, I felt like my thoughts on the topic were a mess.
+    \item I implemented (with help of chat) a first manufactured solutions example, just testing the lopcalisation, not the whole DWR procedure. 
+    \item Iterated on a new draft with Chat based on Umberto and I's meeting. 
+    \item Started typing up some notes for the meeting tomorrow. 
 \end{itemize}
 
 \textbf{Friday}
@@ -414,7 +530,7 @@ Finally, for the other facet term, we take $v = (\beta_S^T)^2\phi_i,$ where $\ph
 
 
 
-
+\newpage
 
 \section{Running Thesis Review List}
 
