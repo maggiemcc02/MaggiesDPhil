@@ -1,0 +1,319 @@
+% \documentclass[12pt,a4paper]{article}
+
+% \setlength{\topmargin}{0.0in}
+% \setlength{\oddsidemargin}{0.33in}
+% \setlength{\textheight}{9.0in}
+% \setlength{\textwidth}{6.0in}
+% \renewcommand{\baselinestretch}{1.25}
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,array}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+% % Make all sections Plum
+% \usepackage[dvipsnames]{xcolor}
+% \usepackage{titlesec}
+% % This automatically colors all section titles Plum
+% \titleformat{\section}
+%   {\color{Plum}\normalfont\Large\bfseries}{\thesection}{1em}{}
+% \titleformat{\subsection}
+%   {\color{Plum}\normalfont\Large\bfseries}{\thesubsection}{1em}{}
+% % Shortcut for standard Orchid
+% \newcommand{\spring}[1]{\textcolor{Orchid}{#1}}
+
+
+
+% Colour Section Titles
+\usepackage[dvipsnames]{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% Current heading colour (stored as a name)
+\def\currentheadingcolor{Plum}
+
+% Section heading: Plum
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{Plum}}
+  {\thesection}{1em}{}
+
+% Subsection heading: Orchid
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{Orchid}}
+  {\thesubsection}{1em}{}
+
+% For highlightng text
+\newcommand{\skyblue}[1]{\textcolor{SkyBlue}{#1}}
+
+
+% Bullets inherit the colour of the nearest heading
+
+% % Update current colour when entering a heading
+% \AddToHook{cmd/section/before}{%
+%   \gdef\currentheadingcolor{Plum}%
+% }
+% \AddToHook{cmd/subsection/before}{%
+%   \gdef\currentheadingcolor{Orchid}%
+% }
+% % Automatically colour itemize bullets
+% \setlist[itemize,1]{
+%   label=\textcolor{\currentheadingcolor}{\textbullet}
+% }
+% \setlist[itemize,2]{
+%   label=\textcolor{\currentheadingcolor}{\textbullet}
+% }
+
+\title{\textbf{Notes and Logs for Week 2 MT 2026}}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Meeting Notes From Meeting with Pablo October 27}
+
+\begin{itemize}
+
+
+\item Pablo explained to me a bit about the connection between the biharmonic problem and linear elasticity. This was relevant because the Carstensen paper tackles linear elasticity. He referred me to Peter Howell's book for the details. The analogy he gave was from physics. To go from the voltage (scalar) to an electric field (vector) you use the gradient. Similarly, the rotated gradient connects the biharmonic problem and linear elasticity. Rognes and Logg do a linear elasticity example in their paper. 
+
+\item He thought that maybe we do not need the squared bubble for the normal derivative facet problem. I can maybe investigate this further. 
+
+\item He explained the $Q$ space to me . My understanding is that a function in $Q$ is of the form $v |_T = \lambda_0 \lambda_1 p_0 + \lambda_1\lambda_2 p_1 + \lambda_2\lambda_0 p_2$, but that Pablo intentionally defines the FacetBubble space using \texttt{variant = integral}. This is key! If we used the default FacetBubble space, we would stick with Lagrange elements, and the extension of the basis facet functions to the cell interior would give zero (zero at the interior DOF by definition). In contrast, by using \texttt{variant = integral}, we use hierarchical basis functions (what does this mean?) whereby the facet basis functions are extended as a constant over the cell interior? Thus, to establish the equivalence (or non-equivalence) with Rognes and Logg, we need to see how they define the extension of their facet basis functions over the cell interior. 
+
+\item He seemed on board with my proposed bubbles and cones. 
+
+\end{itemize}
+
+\section{Meeting Notes From Meeting with Umberto October 26}
+
+\begin{itemize}
+
+\item We looked a bit further into the bubbles in Rognes and Logg and Umberto is convinced that actually Pablo's implementation ends up doing the same as the one of Marie because we get rid of the interior part of the cone bubble anyway. Maggie will meet with Pablo tomorrow to figure this out and report back. (I (Maggie) am still not fully convinced)
+
+\item I want to look more into \texttt{ResitrictedElement}. Umberto explained it to me but I may not have fully followed. 
+
+\item Umberto talked me through \texttt{.assign(1)} in Firedrake. 
+
+\item We discussed a bit the meaning of the boundary conditions in a second-order problem  again, This time, we discussed how to implementation. In particular, Umberto discussed penalty methods à la Aubin-Babuska (his Thesis) and Nitsche tricks (Farrell, Van Beeck). We also discussed how using red-HCT, due to the way the dofs are described, allows for a simple implementation of the clamped boundary conditions typical of the bi-Laplacian.
+
+\item We will meet 9-10 next week. 
+
+\end{itemize}
+
+\section{Meeting Notes From Meeting with Patrick October 23}
+
+\begin{itemize}
+    \item I went through the localisation ideas with Patrick. He agreed that it did not seem like Pablo's implementation is exactly what Rognes and Logg propose. As a result, I will set up a meeting with Pablo to sort out the implementation details.
+    \item Error propogation exists but it is one of the many sort of heuristic apects of adaptivity. We want a practical error indicator, maybe some error propogation is not a moajor worry. At some point, it might be interesting to work with David Niederkofler on exploring some sort of optimality results for the automated localisation (Carstensen's axioms etc). 
+    \item What I have should apply to a simplex but I will double check. I also want to look into what a FB space looks like on different cell geoemetries (ex: tetrahedrom). 
+    \item I still want to look into the Cao et. al paper. Pablo gave it to me so there is some credence there. 
+    \item Patrick seemed to agree that SISC style was appropriate. 
+    \item Background-wise, we need to cater to a general numerical analysis audience. They may not know infinite-dimensional spectra, they may not know pseudospectra, and they will not know Matt's algorithm. It is our job to briefly outline these things. 
+    \item The deep operator theory may not be suited for this paper. Maybe for something more analytical in the future. 
+    \item Lipschitz proof is useful in the paper, even though it is an exercise in Matt's book. 
+    \item The Maxwell example is a good running example for context. 
+    \item The deterioration as the eigenfunctions become more oscillatory is not some crazy weird result, if anything, it may be expected. We could dive into this in the future, but it may not be needed for this paper. 
+    \item For now, I will continue to iterate with AI but with better prompts (Change text as little as possible, etc) and with better models for writing (Codex in terminal, 5.6 Sol in high better than 6, Clause Opus 5.5). 
+    \item I will apply for all the conferences we discussed (Gene Golub (Patrick will write letter), EFEF, ICMS, ENUMATH and with funding where avilable). Maybe Matt and I could organise a minisymposium in ENUMATH? 
+    \item Jose Roman will be here Monday week 9 and I should meet with him. Patrick and I will go to his talk on Thursday at RAL. 
+\end{itemize}
+
+
+
+
+\newpage
+
+
+\section{Running To-Do Lists}
+
+\textbf{Academic}
+
+\begin{itemize}
+    \item Implement and test a $C^1$ localisation.
+    \item Read into the integral variant of the FB space. Also Hierarchical elements. 
+    \item Read into the connection between biharmonic and linear elasticity (maybe more an interest rather than a requirement). 
+    \item Umberto gave me some references for the proper way to handle normal traces when dealing with the bilaplacian. I want to spent a few hours with these because I have not seen those arguments before. 
+    \item More work on a draft. I hate Chat's writing so I will want to start over myself. 
+    \item Work through the counterexamples from Umberto. 
+    \item Umberto sent me some slides that may be related to our variational formulation of Matt's algorithm. I still need to go through them. 
+    \item Tests for Mike Giles.
+    \item More examples. 
+    \item Code clean up, MPI/GIT learning/review. 
+    \item Lot's of more topics to dive into (below). 
+\end{itemize}
+
+\textbf{Administrative}
+
+\begin{itemize}
+    \item Prep for teaching.
+    \item Interview training courses and right to work. 
+    \item ICMS application!!
+    \item Other applications (specifically Gene Golub). 
+\end{itemize}
+
+
+
+
+
+\newpage
+\section{Logs}
+
+Below are my daily logs for this week
+\newline
+
+\textbf{Saturday}
+\begin{itemize}
+   \item A lot of (maybe unnecessarily detailed) prep for teaching Monday. 
+\end{itemize}
+
+
+\textbf{Monday}
+
+\begin{itemize}
+    \item Meeting with Umberto, notes above.
+    \item Class 11-1
+    \item Prepped for teaching.
+    \item Taught from 4-6.
+\end{itemize}
+
+\textbf{Tuesday}
+
+\begin{itemize}
+    \item 
+\end{itemize}
+
+\textbf{Wednesday}
+
+\begin{itemize}
+    \item 
+\end{itemize}
+
+\textbf{Thursday}
+\begin{itemize}
+    \item 
+\end{itemize}
+
+\textbf{Friday}
+
+\begin{itemize}
+    \item
+\end{itemize}
+
+
+
+\newpage
+
+\section{Running Thesis Review List}
+
+I went back over my thesis and made note of topics/results I would like to review, knowledge gaps I would like to fill, and open questions we could explore. 
+
+\subsection{To  (i.e., to write some better notes on)}
+
+\begin{itemize}
+    \item Nick's text (just a nice review).
+    \item NLA (iterative) methods. How do we compute clusters with SLEPc? Ideal parameters for the inner problems?
+    \item Properties of nonnegative, self-adjoint operators.
+    \item Why closed operator is boundedly invertible iff it has a trivial nullspace and its range is the Hilbert space. Why the spectrum of a nonclosed operator is the whole plane. 
+    \item Closed operators, compact operators. 
+    \item Domain choices and density of Sobolev spaces in $L^2.$
+    \item Banach and Hilbert Adjoints. Also in finite dimensions.
+    \item Relating the spectrum of an operator to the spectrum of its adjoint. 
+    \item Equivalent pseudospectra definitions (proof). 
+    \item The discretise-then-solve approach. When can we get non-point spectra? Why do pitfalls occur? What are the eigenfunctions of non-eigenvalues? Is it really so bad or do you just need to be careful?
+    \item Other failure modes of discretise-then-solve.
+    \item Essential spectra (chapter 8 of Matt's text). Weyl sequences. 
+    \item History and physical context of the Maxwell problem.
+    \item The FEEC/Boffi explanation of spectral pollution for Maxwell. 
+    \item Injection moduli (finite vs. infinite) and norm dependence. Using norm of $\mathcal{H}$ instead of $D(A).$
+    \item Why distance is equal to gamma for normal operator. 
+    \item Inverse resolvent norm and injection moduli proof. 
+    \item Assumptions on phi and the convergence that follows. 
+    \item Dual and Anitdual. What does Riesz representation look like in each case?
+    \item FE version of Colbrook's folding.
+    \item The variational issues we found. Umberto's counterexamples. 
+    \item General DWR. Dual equation vs Adjoint eigenproblem.
+    \item \skyblue{FIX DWR ERROR ESTIMATE.}
+    \item Rognes and Logg localisation. Bubble and cones. 
+    \item Fredholm theory, Garding inequality, and point spectra results. 
+    \item Compact resolvents.
+    \item Least squares and orthogonal projections.
+    \item Avoiding $|z|^2$ for Maxwell. 
+    \item Why the contour?
+    \item Review Maxwell speedups.
+    \item Overall Code Review.
+    
+\end{itemize}
+
+
+\subsection{Running To Learn List}
+
+\begin{itemize}
+    \item The variational issues we found. Umberto's counterexamples. 
+        \item Why do we want a variational view? What operators are `variational'?
+    \item $M$ need not be invertible claim. Can we just restrict to the range? Have we already? Is this claim even true? What is $M$ for mixed Poisson? 
+    \item What is the real variational limitation? 
+    \item Why a sawtooth?
+    \item The details of the pseudospectra of the advection--diffusion example. 
+    \item Dirac Operators and Dirac folding.
+    
+\end{itemize}
+
+\subsection{Running To Explore List}
+
+\begin{itemize}
+    \item Multiplicity issue. Should we instead match the whole eigenspace? What is special about the first discrete eigenvalue in a cluster? Isn't it just deemed slightly smaller than the other numerically? If we do a basis matching, what do we compute the error estimate for? Do we compute an average estimate? 
+    \item Extending the localisation to account for advection-diffusion. Do we want a general extension to fourth-order operators or just derive a specific localisation for advection diffusion?
+    \item Should we just be doing p-refinement? 
+    \item DWR is not designed for general spectral values. Is DWR the right chouce? Can we extend it or should we do something different?
+    \item Correction vs. Enriched solve. Can we find examples where the correction substantially wins? Or will that not be the case?
+    \item Mike Giles' tighter bound and its impact on computations. How can I deem it better or worse? 
+    \item Can we get a tighter Lipschitz constant than one for gamma? I think one is an upper bound. Matt goes into this in an exercise of his book. 
+    \item Inner $O(h_K^2)$ criteria. Do we want to explore something else? Where else does something like this show up? 
+    \item Further investigate the deterioration as $\text{Re}(z)$ increases. 
+    \item Can we find any easy speedups like we did for Maxwell? 
+    \item What other examples and why? 
+    \item Can we do better than Dirac folding?
+    \item For a non-normal operator, can we relate its spectra to the analogous Dirac operator? 
+    \item How will we get around (or fix) the variational limitation of Colbrook's approach? 
+    \item To make running in parallel easier, I do not carry solutions as initial guesses for nearby $z$ values. It would be interesting to explore a `smart' way to do this. What $z$ values should be grouped together and why? 
+    \item Nick talks a bit about eliminating whole discs in the complex plane. Maybe there is something there for us to explore? 
+    \item Can we develop and/or apply preconditioners for eigenproblems? 
+\end{itemize}
+
+
+
+
+\end{document}
