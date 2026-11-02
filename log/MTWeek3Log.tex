@@ -102,6 +102,26 @@
 
 \maketitle
 
+\section{Questions for Umberto November 2}
+
+\begin{itemize}
+    \item Understanding \texttt{variant = integral} in Pablo's implementation. What are hierarchical basis functions. I need to find the Rognes and Logg implementation.
+    \item Why does Umberto think it does not matter?
+    \item Traces -- they are defined weakly? Sometimes (Laplacian) the interior PDE gives you what you need (like $u \in H(\text{div})$ and you can use an already defined trace from Boffi-Brezzi-Fortin. Other times, you follow their procedure to define your own trace. This often involves using one of Green's identities and moving all the well-defined terms to one side. Then, show that the resulting map is a dual element. 
+
+    \item Nitsche's method -- the penalty method is ill-conditioned because we have to take $\gamma \rightarrow \infty.$ The Lagrange multiplier method causes us to lose positive-definiteness needed for an (easily) stable discretisation.  The augmented Lagrangian method gives us the pros of each method and overcomes their cons. Then, the Nitsche method uses the extra information we learn about $\gamma$ from the Lagrange multplier method ($\gamma$ is proportional to the boundary flux). With this, we can find conditions on $\gamma$ that give the desired coercivity. 
+\end{itemize}
+
+\subsection{My Current Plan}
+
+\begin{itemize}
+    \item Read about Nitsche for Biharmonic and implement a first example (just a pde solve). 
+    \item Look at Rognes and Logg's implementation to see how they define the extension. 
+    \item Do my DWR implementation on the Biharmonic problem (manufactured solution). 
+    \item Conitnue creating drafts. 
+\end{itemize}
+
+
 \section{Meeting Notes From Meeting with Pablo October 27}
 
 \begin{itemize}
@@ -212,26 +232,43 @@ Below are my daily logs for this week
 \textbf{Tuesday}
 
 \begin{itemize}
-    \item 
+    \item Prepped for meeting with Pablo.
+    \item Met with Pablo (notes above)
+    \item Worked a little bit on ICMS application.
+    \item Started reading Boffi, Brezzi, Fortin Ch. 1 (after some much-needed Galerkin approx and energy minimisation review from the FE course).
+    \item Going to continue with that tomorrow. 
 \end{itemize}
 
 \textbf{Wednesday}
 
 \begin{itemize}
-    \item 
+    \item Continued to work through Ch.1 and Ch.2 of the Boffi, Brezzi, Fortin text. There is alot going on here. 
+    \item I also read some online blog posts on the topic to try and gain some high-level context. 
 \end{itemize}
 
 \textbf{Thursday}
 \begin{itemize}
-    \item 
+    \item Seminar day.
+    \item Continued with the text. 
+    \item Moved on to the Farrell, Beeck, Zerbinati paper where they work this out for the biharmonic problem. 
+    \item Tried to connect the main ideas: using Green's identities to define the trace variationally. Using the trace/extension theorems (along with Cauchy-Schwarz) to show that the trace is a well-defined dual obect. 
+    \item I also went thriugh bits of Umberto's MSc. thesis where he talks about fractional Sobolev spaces.
 \end{itemize}
 
 \textbf{Friday}
 
 \begin{itemize}
-    \item
+    \item A bit more work on the Farrell, Beeck, Zerbinati paper - trying to make general connections and conclusions on the trace methodology. 
+    \item Thinking more about fractional Sobolov spaces. That seems like a complicated rabbit hole. I took out \textit{A First Course in Sobolev Spaces} by Leoni which is dense!
+    \item Moved on to reading the blog post on Nitche's method. 
 \end{itemize}
 
+
+\textbf{Saturday}
+\begin{itemize}
+    \item Teaching prep. 
+    \item Tried to tackle the never-ending administrative to-do list. 
+\end{itemize}
 
 
 \newpage
