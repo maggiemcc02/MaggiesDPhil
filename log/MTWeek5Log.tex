@@ -1,0 +1,751 @@
+% \documentclass[12pt,a4paper]{article}
+
+% \setlength{\topmargin}{0.0in}
+% \setlength{\oddsidemargin}{0.33in}
+% \setlength{\textheight}{9.0in}
+% \setlength{\textwidth}{6.0in}
+% \renewcommand{\baselinestretch}{1.25}
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+
+\usepackage{hyperref}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
+\newcommand{\dv}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\usepackage{caption}
+\captionsetup[figure]{font=small} 
+% \captionsetup[table]{font=small}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{mathtools}
+\newcommand{\defeq}{\vcentcolon=}
+\newcommand{\eqdef}{=\vcentcolon}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{teal},
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    tabsize=4
+}
+
+\geometry{margin=27mm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\setlist[itemize]{topsep=3pt,itemsep=4pt,parsep=1pt}
+\setlist[enumerate]{topsep=3pt,itemsep=9pt,parsep=1pt}
+\hypersetup{colorlinks=true,linkcolor=black}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\qtest}{Q_{\mathrm{test}}}
+\newcommand{\qtrial}{Q_{\mathrm{trial}}}
+\newcommand{\rFacet}{R_{\mathrm{facet}}}
+\newcommand{\rCell}{R_{\mathrm{cell}}}
+\newcommand{\cones}{\mathrm{cones}}
+\newcommand{\dn}{\partial_n}
+\newcommand{\bubbles}{\texttt{bubbles}}
+\newcommand{\midS}{\operatorname{mid}(S)}
+\newcommand{\Rone}{R_{\partial T}^{1}}
+\newcommand{\Rzero}{R_{\partial T}^{0}}
+\newcommand{\Roneh}{R_{\partial T}^{1,h}}
+\newcommand{\Rzeroh}{R_{\partial T}^{0,h}}
+
+% Define environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+% % Make all sections Plum
+% \usepackage[dvipsnames]{xcolor}
+% \usepackage{titlesec}
+% % This automatically colors all section titles Plum
+% \titleformat{\section}
+%   {\color{Plum}\normalfont\Large\bfseries}{\thesection}{1em}{}
+% \titleformat{\subsection}
+%   {\color{Plum}\normalfont\Large\bfseries}{\thesubsection}{1em}{}
+% % Shortcut for standard Orchid
+% \newcommand{\spring}[1]{\textcolor{Orchid}{#1}}
+
+
+
+% Colour Section Titles
+\usepackage[dvipsnames]{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% Current heading colour (stored as a name)
+\def\currentheadingcolor{Plum}
+
+% Section heading: Plum
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{Plum}}
+  {\thesection}{1em}{}
+
+% Subsection heading: Orchid
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{Orchid}}
+  {\thesubsection}{1em}{}
+
+% For highlightng text
+\newcommand{\skyblue}[1]{\textcolor{SkyBlue}{#1}}
+
+
+% Bullets inherit the colour of the nearest heading
+
+% % Update current colour when entering a heading
+% \AddToHook{cmd/section/before}{%
+%   \gdef\currentheadingcolor{Plum}%
+% }
+% \AddToHook{cmd/subsection/before}{%
+%   \gdef\currentheadingcolor{Orchid}%
+% }
+% % Automatically colour itemize bullets
+% \setlist[itemize,1]{
+%   label=\textcolor{\currentheadingcolor}{\textbullet}
+% }
+% \setlist[itemize,2]{
+%   label=\textcolor{\currentheadingcolor}{\textbullet}
+% }
+
+\title{\textbf{Notes and Logs for Week 5 MT 2026}}
+\author{}
+\date{}
+% \author{Maggie McCarthy}
+% \date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Meeting with Patrick November 11}
+
+\begin{itemize}
+    \item I shouldn't spend much time on the \texttt{varient = integral} issues. What I need to be able to specify is the properties we need our test functions to satisfy, what we can choose on top of that, what we do choose, and why. For example, if we are free to choose an extension to the interior of the cell, maybe we make a choice that somehow makes things cheap. This is what I need to sort out. Why are we free to choose the extension and why is the integral variant beneficial. 
+    \item What may be helpful is actually looking at the basis functions for the $Q$ space. 
+    \item Work towards the first implementation. Confirm that Nitsche's formulation violates our generic residual. Then, maybe we can enforce the bundry conditions strongly by picking the DOF we want to enforce the condition at. Key is that this depends on the geometry (access subclass DirichletBC and override the nodes method). Patrick mentioned a Kirby and Mitchell paper. Also we discussed just doing it in 1D with Hermite elements to simplify everything. 
+    \item Implement this first example to confirm whether the localisation is working as expected. 
+    \item Then update my implementation with respect to the adaptivity updates in Firedrake. Codex can probably help here.
+    \item Start running some examples, also do the Mike Giles bound test. 
+    \item Tim might be able to chat about Traces (or did he say Nitsche)? 
+    \item I can/shyould  organise a minisymposium for ENUMath. I should reach out to Matt. Typically you get 4 or 8 speakers. 
+\end{itemize}
+
+\section{Questions/Comments for Meeting with Patrick November 11}
+
+
+\subsection{What Have I Been Up To?}
+
+\begin{itemize}
+    \item Met with Pablo. He explained his implementation to me. I am still a bit confused there.
+    \item Spent a few days learning about traces. Could have spent a month!
+    \item Spend last week learning about Nitsche's method and working through a first implementation.
+    \item This week I tried to do a first full implementation for the biharmonic, which raised more issues/questions $\dots$
+    \item Firedrake course today.
+    \item Too much time on my teaching.
+    \item Graduated and have been spending time with my parents. 
+\end{itemize}
+
+\subsection{Administrative Questions}
+
+\begin{itemize}
+    \item Home for Christmas. 
+    \item Workshop issues.
+    \item ENUMath minisymposium?
+    \item Teaching taking over too much. 
+\end{itemize}
+
+\subsection{Academic Questions}
+
+\begin{itemize}
+    \item Still struggling to understand Pablo's implementation. 
+    \item Is it common for the choice of penalty parameter in Nitsche's method to be sensitive? (show an example)
+    \item Nitsche's method now seems like a bit of a waste. I did not think of how the extra terms violate our generic error representation. 
+    \item Nitsche's method or HCT elements? 
+\end{itemize}
+
+\subsection{Running To-Do List}
+
+\begin{itemize}
+    \item Hierarchical bases and the integral variant.
+    \item New DWR implementation and tests. 
+    \item Understand traces more, maybe write a formal note. 
+    \item Mike's tighter bound and tests.
+    \item Umberto's counterexamples.
+    \item Umberto's Slides.
+    \item Continue working on drafts. 
+\end{itemize}
+
+\newpage 
+\section{Notes for Meeting with Patrick November 11}
+
+\subsection{Our Proposed $C^1$ Localisation}
+
+
+Our generic residual is of the form
+\begin{equation}
+    r_T(v)
+    =(R_T,v)_T
+      +(\Rone,\dn v)_{\partial T}
+      +(\Rzero,v)_{\partial T}.
+\end{equation}
+
+\textbf{Example:}
+
+Consider the clamped biharmonic problem in two dimensions:
+
+\[
+\begin{cases}
+\Delta^2 u=f & \text{in }\Omega,\\
+u=\partial_n u=0 & \text{on }\partial\Omega.
+\end{cases}
+\]
+The localisation is as follows:
+\begin{enumerate}[label=\roman*),leftmargin=2.1em,itemsep=1em]
+  \item The residual on $T$ is
+  \[
+  r_K(v)=(f,v)_T-(\Delta u_h,\Delta v)_T.
+  \]
+
+  \item Recall,
+  \[
+  \int_T (w\Delta v-v\Delta w)\,\mathrm{d}x
+  =\int_{\partial T}(w\partial_n v-v\partial_n w)\,\mathrm{d}s.
+  \]
+  \[
+  \begin{aligned}
+  \int_Tw\Delta v\,\mathrm{d}x
+    &=\int_{\partial T}w\partial_n v\,\mathrm{d}s
+      -\int_T\nabla w\cdot\nabla v\,\mathrm{d}x,\\[0.5em]
+  \int_Tv\Delta w\,\mathrm{d}x
+    &=\int_{\partial T}v\partial_n w\,\mathrm{d}s
+      -\int_T\nabla v\cdot\nabla w\,\mathrm{d}x.
+  \end{aligned}
+  \]
+
+  \item Take $w=\Delta u_h$, so
+  \[
+  \Delta w=\Delta^2u_h.
+  \]
+
+  \item Then,
+  \[
+  \begin{aligned}
+  \int_T (w\Delta v-v\Delta w)\,\mathrm{d}x
+    &=\int_T(\Delta u_h\Delta v-v\Delta^2u_h)\,\mathrm{d}x\\
+    &=\int_{\partial T}\Delta u_h\,\partial_n v\,\mathrm{d}s
+      -\int_{\partial T}v\,\partial_n(\Delta u_h)\,\mathrm{d}s.
+  \end{aligned}
+  \]
+
+  \item Thus,
+  \[
+  \begin{aligned}
+  \int_K\Delta u_h\Delta v\,\mathrm{d}x
+    &=\int_Tv\Delta^2u_h\,\mathrm{d}x\\
+    &\quad+\int_{\partial T}\Delta u_h\,\partial_n v\,\mathrm{d}s\\
+    &\quad-\int_{\partial T}v\,\partial_n(\Delta u_h)\,\mathrm{d}s.
+  \end{aligned}
+  \]
+
+  \item Hence,
+\begin{align}
+  r_T(v)
+    =(f-\Delta^2u_h,v)_T
+    -(\Delta u_h,\partial_n v)_{\partial T}
+    +(\partial_n(\Delta u_h),v)_{\partial T}.
+  \end{align}
+\end{enumerate}
+
+\textbf{What we need for localisation:}
+
+We want three sequential problems to isolate the three residuals. In particular, we want:
+\begin{enumerate}[label=(\arabic*)]
+    \item $v_1$ such that
+    \begin{equation}
+       v_1|_T=b_T^2\phi_i,
+       \qquad v_1|_{\partial T}=0.
+    \end{equation}
+    This will allow us to ``probe'' $R_T$.
+
+    \item $v_2$ such that
+    \begin{equation}
+        v_2|_{\partial T}=0,
+        \qquad \dn v_2|_S=b_S^2\phi_i.
+    \end{equation}
+
+    \item $v_3$ such that
+    \begin{equation}
+        v_3|_S=b_S^2\phi_i.
+    \end{equation}
+\end{enumerate}
+
+With these test functions, we can form three sequential local problems:
+\begin{enumerate}[label=(\arabic*)]
+    \item
+    \begin{align}
+         (R_T,b_T^2\phi_i)_T
+           &=r_T(b_T^2\phi_i).
+    \end{align}
+    % (R_T,v_1)_T&=r_T(v_1),\\
+    %     \Longrightarrow\qquad
+
+    \item
+    \begin{equation}
+        (\Rone,b_S^2\phi_i)_S
+        =r_T(v_2)-(R_T,v_2)_T.
+    \end{equation}
+
+    \item
+    \begin{equation}
+    \begin{aligned}
+        (\Rzero,b_S^2\phi_i)_S
+          ={}&r_T(v_3)-(R_T,v_3)_T
+             -(\Rone,\dn v_3)_{\partial T}.
+    \end{aligned}
+    \end{equation}
+\end{enumerate}
+
+
+\textbf{Our bubbles:}
+
+As already established, our cell residual bubbles are the squared bubbles. Thus, we take
+\begin{equation}
+    v_1=b_T^2\phi_i.
+\end{equation}
+
+\textbf{Check:}
+\begin{itemize}
+    \item $v_1|_{\partial T}=0$ because $b_T|_{\partial T}=0$.
+    \item
+        $\nabla v_1=2b_T\nabla b_T\,\phi_i+b_T^2\nabla\phi_i,$
+    so $\nabla v_1|_{\partial T}=0$ because $b_T=0$.
+\end{itemize}
+
+For the edge bubbles, we want to use some version of Carstensen's, ideally one that is easy to implement in Pablo's current implementation. I propose (with the help of Chat)
+\begin{equation}
+    v=-\bubbles\,q,\qquad q\in\qtest.
+\end{equation}
+On a triangle, take $S=\{\lambda_0=0\}$ and write
+$\bubbles=C\lambda_0\lambda_1\lambda_2$. Since
+$q|_S=\lambda_1\lambda_2 p$ for some $p\in\PP_r(S)$,
+\begin{equation}
+    v=-C\lambda_0\lambda_1\lambda_2\,q\quad\text{on }T,
+    \qquad v|_S=0.
+\end{equation}
+% Here $C$ is the bubble normalisation constant and $H_S$ is the altitude of $T$ above $S$, so that
+% $\partial_{n_S}\lambda_0=-1/H_S$ for the outward unit normal $n_S$.
+
+\textbf{Check:}
+\begin{itemize}
+    \item $v|_{\partial T}=0$ because the cell bubble vanishes on every facet.
+    \item By the product rule,
+    \begin{equation}
+        \nabla v=-C\left[\lambda_1\lambda_2q\,\nabla\lambda_0
+             +\lambda_0\nabla(\lambda_1\lambda_2q)\right].
+    \end{equation}
+    Thus, on the selected facet $S$,
+    \begin{align}
+        \left.\nabla v\right|_S
+            &=-C(\lambda_1\lambda_2)^2p\,\nabla\lambda_0,\\
+        \left.\partial_{n_S}v\right|_S
+            &=-C(\partial_{n_S}\lambda_0)(\lambda_1\lambda_2)^2p
+             =C\tilde C(\lambda_1\lambda_2)^2p.
+    \end{align}
+
+
+% \subsection{Is this constant okay?}
+% \textbf{Are these constants ok?:}
+
+% Set $\widetilde C=-\partial_{n_S}\lambda_0=1/H_S>0$.
+% \item Are these constants ok? 
+% \begin{enumerate}[label=\roman*)]
+%     \item Let
+%     \begin{equation}
+%         v=- C\lambda_0(\lambda_1\lambda_2)^2\phi_i.
+%     \end{equation}
+%     Then
+%     \begin{equation}
+%         \dn v|_S=-C\widetilde C(\lambda_1\lambda_2)^2\phi_i.
+%     \end{equation}
+
+%     \item Instead, define
+%     \begin{equation}
+%         \widetilde v
+%            =- \frac{C}{\widetilde C}\lambda_0(\lambda_1\lambda_2)^2\phi_i
+%            =\frac{1}{\widetilde C}v.
+%     \end{equation}
+%     Then
+%     \begin{equation}
+%         \dn\widetilde v|_S
+%           =-C(\lambda_1\lambda_2)^2\phi_i
+%           =\frac{1}{\widetilde C}\dn v.
+%     \end{equation}
+
+%     \item Since $v=\widetilde C\widetilde v$,
+%     \begin{align}
+%         (\Rone,\dn v)_S
+%             &=r_T(v)-(R_T,v)_T,\\
+%         (\Rone,\widetilde C\dn\widetilde v)_S
+%             &=r_T(\widetilde C\widetilde v)
+%                     -(R_T,\widetilde C\widetilde v)_T,\\
+%         \Longrightarrow\quad
+%         (\Rone,\dn\widetilde v)_S
+%             &=r_T(\widetilde v)-(R_T,\widetilde v)_T.
+%     \end{align}
+
+%     \item Thus, as long as everything is (conjugate) linear in the test function, any constants do not matter (we can use $v$ or $\widetilde v$).
+
+% \end{enumerate}
+\end{itemize}
+
+
+For the final facet problem, we follow Rognes and Logg and take
+\begin{equation}
+    v_3=(\beta_S^T)^2\phi_i.
+\end{equation}
+\textbf{Check:}
+\begin{equation}
+    v_3|_S=b_S^2\phi_i,
+    \qquad v_3=0\quad\text{on the other facets}.
+\end{equation}
+
+
+
+\textbf{Comments, Questions, Issues:}
+
+\begin{itemize}
+    \item Pablo's implementation of the cones/facet bubbles for the Rognes and Logg error representation uses the following \texttt{FacetBubble} space: 
+\begin{lstlisting}
+# Facet bubbles
+FB = FunctionSpace(mesh, "FB", dim, variant=variant)
+cones = Function(FB).assign(1)
+
+# Broken facet bubble space
+# Might need to change for mixed spaces!!
+el = BrokenElement(FiniteElement("FB", cell=cell, degree=facet_residual_degree+dim, variant=variant))
+if V.value_shape == ():
+    Q = FunctionSpace(mesh, el)
+else:
+    Q = TensorFunctionSpace(mesh, el, shape=V.value_shape)
+\end{lstlisting}
+Here, \texttt{variant = integral}. Apparently, this is how Pablo defines the extension of the test functions on the facets to the interior of the cell, which is something Rognes and Logg do not specify in this paper. I am still trying to understand what this integral variant exactly is, why it is beneficial, and how it defines a hierarchical basis? 
+
+\item Does it matter that this may be different from Rognes and Logg's? They do not seem to explicitly say how they extend their cones into the interior. I was going to try and dig out their code (not as simple to find as I first thought it would be). 
+
+\end{itemize}
+
+
+
+\newpage
+
+
+\subsection{Working Towards a Biharmonic Example: Traces}
+
+\begin{itemize}
+    \item I have used Chat to help me type up some of my handwritten notes on traces. In doing so, I realised that I may not have as great of a handle on it as I thought. I may need to return to this at some point. 
+    \item I find the topic quite interesting and I would like to understand the trace theorems and the relevant fractional Sobolev spaces more. We have seen some of it in the `Functional Analytic Methods for PDEs' course. 
+    \item How much more time should I give this? Is it just useful theory to know? What are the main takeaways?
+
+\end{itemize}
+
+
+\subsection{Working Towards a Biharmonic Example: Nitsche's Method}
+
+\begin{itemize}
+    \item I have been trying to work towards a first example for our new $C^1$ localisation. Of course, the first example I thought of was the homogeneous clamped Biharmonic problem (self-adjoint, requires $C^1,$ easy manufactured solutions). 
+    \item One of the first issues that arises is the enforcement of the boundary conditions. As a result, Umberto introdcued me to Nitsche's method (and briefly to HCT elements). We agreed that I would read into and understand Nitsche's method.
+    \item As a result, I spent the week learning about Nitsche's method. I read the Shapero blog post, and then the Benzaken, Evans, Tamstorf paper. I spent most of my time on the latter paper (over 40 pages). Then I implemented a first example (manufactured solution, clamped conditions, Argyris elements). However, it seems like the results (at least the order of convergence) are pretty sensitive to the choice of penalty parameter, which seems a bit spooky. Is this typical behaviour? 
+    \item The big kicker is that I began to try and use the biharmonic example to test our DWR localisation and realised that the extra Nitsche terms may cause the biharmonic residual to not match our generic residual for $C^1$ localisation. What will we do now? Can we strongly enforce boundary conditions in some way? Maybe with these HCT elements? 
+\end{itemize}
+
+
+\newpage
+
+
+
+
+
+% \section{My To-Do List}
+
+
+% \begin{itemize}
+%     \item Read about Nitsche for Biharmonic and implement a first example (just a pde solve). 
+%     \item Read into Hierarchical bases. 
+%     \item Look at Rognes and Logg's implementation to see how they define the extension. 
+%     \item Do my DWR implementation on the Biharmonic problem (manufactured solution). 
+%     \item Conitnue creating drafts. 
+% \end{itemize}
+
+\section{Meeting Notes Umberto November 2}
+
+\begin{itemize}
+
+\item We started by discussing my meeting with Pablo. In particular, we discussed the integral variant of the FacetBubble space along with Hierarchical bases. Reading more into this is on my to-do list. I also may dig out the Rognes and Logg implementation to compare. (side note: Umberto mentioned that maybe me giving a reading group on this may be useful). 
+
+
+
+\item I am going to continue reading bout Nitsche's method. My goal for this week is a biharmonic implementation (and maybe Cahn-Hilliard). 
+
+
+
+\item I have been working through some of the background on traces - but of course I am only skimming the tip of an iceberg. Umberto sent me some references for trace and extension theorems. He mentioned that it would be nice to create a more formal note on this topic (particularly for $H^1$, $H^2$, $H(\text{curl})$ and $H(\text{div}))$ - it may be a nice contribution to others in the group when they need to learn it. This is something I may pick away at overtime, but for now Nitsche's method is my immediate priority.
+
+
+
+\item We discussed some upcoming conferences. I chatted with him about the Prague and Gene Golub summer school, which I learned conflicts with the Biennial Numerical Analysis Conference (last two days of Gene Golub overlap with the conference).
+
+\end{itemize}
+
+\subsection{Questions for Umberto November 2}
+
+\begin{itemize}
+    \item Understanding \texttt{variant = integral} in Pablo's implementation. What are hierarchical basis functions. I need to find the Rognes and Logg implementation.
+    \item Why does Umberto think it does not matter?
+    \item Traces -- they are defined weakly? Sometimes (Laplacian) the interior PDE gives you what you need (like $u \in H(\text{div})$ and you can use an already defined trace from Boffi-Brezzi-Fortin. Other times, you follow their procedure to define your own trace. This often involves using one of Green's identities and moving all the well-defined terms to one side. Then, show that the resulting map is a dual element. 
+
+    \item Nitsche's method -- the penalty method is ill-conditioned because we have to take $\gamma \rightarrow \infty.$ The Lagrange multiplier method causes us to lose the positive-definiteness needed for an (easily) stable discretisation.  The augmented Lagrangian method gives us the pros of each method and overcomes their cons. Then, the Nitsche method uses the extra information we learn about $\gamma$ from the Lagrange multiplier method ($\gamma$ is proportional to the boundary flux). With this, we can find conditions on $\gamma$ that give the desired coercivity. 
+\end{itemize}
+
+% \subsection{My Current Plan}
+
+% \begin{itemize}
+%     \item Read about Nitsche for Biharmonic and implement a first example (just a pde solve). 
+%     \item Look at Rognes and Logg's implementation to see how they define the extension. 
+%     \item Do my DWR implementation on the Biharmonic problem (manufactured solution). 
+%     \item Conitnue creating drafts. 
+% \end{itemize}
+
+
+\section{Meeting Notes From Meeting with Pablo October 27}
+
+\begin{itemize}
+
+
+\item Pablo explained to me a bit about the connection between the biharmonic problem and linear elasticity. This was relevant because the Carstensen paper tackles linear elasticity. He referred me to Peter Howell's book for the details. The analogy he gave was from physics. To go from the voltage (scalar) to an electric field (vector) you use the gradient. Similarly, the rotated gradient connects the biharmonic problem and linear elasticity. Rognes and Logg do a linear elasticity example in their paper. 
+
+\item He thought that maybe we do not need the squared bubble for the normal derivative facet problem. I can maybe investigate this further. 
+
+\item He explained the $Q$ space to me . My understanding is that a function in $Q$ is of the form $v |_T = \lambda_0 \lambda_1 p_0 + \lambda_1\lambda_2 p_1 + \lambda_2\lambda_0 p_2$, but that Pablo intentionally defines the FacetBubble space using \texttt{variant = integral}. This is key! If we used the default FacetBubble space, we would stick with Lagrange elements, and the extension of the basis facet functions to the cell interior would give zero (zero at the interior DOF by definition). In contrast, by using \texttt{variant = integral}, we use hierarchical basis functions (what does this mean?) whereby the facet basis functions are extended as a constant over the cell interior? Thus, to establish the equivalence (or non-equivalence) with Rognes and Logg, we need to see how they define the extension of their facet basis functions over the cell interior. 
+
+\item He seemed on board with my proposed bubbles and cones. 
+
+\end{itemize}
+
+\section{Meeting Notes From Meeting with Umberto October 26}
+
+\begin{itemize}
+
+\item We looked a bit further into the bubbles in Rognes and Logg and Umberto is convinced that actually Pablo's implementation ends up doing the same as the one of Marie because we get rid of the interior part of the cone bubble anyway. Maggie will meet with Pablo tomorrow to figure this out and report back. (I (Maggie) am still not fully convinced)
+
+\item I want to look more into \texttt{ResitrictedElement}. Umberto explained it to me but I may not have fully followed. 
+
+\item Umberto talked me through \texttt{.assign(1)} in Firedrake. 
+
+\item We discussed a bit the meaning of the boundary conditions in a second-order problem  again, This time, we discussed how to implementation. In particular, Umberto discussed penalty methods à la Aubin-Babuska (his Thesis) and Nitsche tricks (Farrell, Van Beeck). We also discussed how using red-HCT, due to the way the dofs are described, allows for a simple implementation of the clamped boundary conditions typical of the bi-Laplacian.
+
+\item We will meet 9-10 next week. 
+
+\end{itemize}
+
+\section{Meeting Notes From Meeting with Patrick October 23}
+
+\begin{itemize}
+    \item I went through the localisation ideas with Patrick. He agreed that it did not seem like Pablo's implementation is exactly what Rognes and Logg propose. As a result, I will set up a meeting with Pablo to sort out the implementation details.
+    \item Error propogation exists but it is one of the many sort of heuristic apects of adaptivity. We want a practical error indicator, maybe some error propogation is not a moajor worry. At some point, it might be interesting to work with David Niederkofler on exploring some sort of optimality results for the automated localisation (Carstensen's axioms etc). 
+    \item What I have should apply to a simplex but I will double check. I also want to look into what a FB space looks like on different cell geoemetries (ex: tetrahedrom). 
+    \item I still want to look into the Cao et. al paper. Pablo gave it to me so there is some credence there. 
+    \item Patrick seemed to agree that SISC style was appropriate. 
+    \item Background-wise, we need to cater to a general numerical analysis audience. They may not know infinite-dimensional spectra, they may not know pseudospectra, and they will not know Matt's algorithm. It is our job to briefly outline these things. 
+    \item The deep operator theory may not be suited for this paper. Maybe for something more analytical in the future. 
+    \item Lipschitz proof is useful in the paper, even though it is an exercise in Matt's book. 
+    \item The Maxwell example is a good running example for context. 
+    \item The deterioration as the eigenfunctions become more oscillatory is not some crazy weird result, if anything, it may be expected. We could dive into this in the future, but it may not be needed for this paper. 
+    \item For now, I will continue to iterate with AI but with better prompts (Change text as little as possible, etc) and with better models for writing (Codex in terminal, 5.6 Sol in high better than 6, Clause Opus 5.5). 
+    \item I will apply for all the conferences we discussed (Gene Golub (Patrick will write letter), EFEF, ICMS, ENUMATH and with funding where avilable). Maybe Matt and I could organise a minisymposium in ENUMATH? 
+    \item Jose Roman will be here Monday week 9 and I should meet with him. Patrick and I will go to his talk on Thursday at RAL. 
+\end{itemize}
+
+
+
+
+\newpage
+
+
+\section{Running To-Do Lists}
+
+\textbf{Academic}
+
+\begin{itemize}
+    \item Implement and test a $C^1$ localisation.
+    \item Read into the integral variant of the FB space. Also Hierarchical elements. 
+    \item Read into the connection between biharmonic and linear elasticity (maybe more an interest rather than a requirement). 
+    \item Umberto gave me some references for the proper way to handle normal traces when dealing with the bilaplacian. I want to spent a few hours with these because I have not seen those arguments before. 
+    \item More work on a draft. I hate Chat's writing so I will want to start over myself. 
+    \item Work through the counterexamples from Umberto. 
+    \item Umberto sent me some slides that may be related to our variational formulation of Matt's algorithm. I still need to go through them. 
+    \item Tests for Mike Giles.
+    \item More examples. 
+    \item Code clean up, MPI/GIT learning/review. 
+    \item Lot's of more topics to dive into (below). 
+\end{itemize}
+
+\textbf{Administrative}
+
+\begin{itemize}
+    \item Prep for teaching.
+    \item Interview training courses and right to work. 
+    \item ICMS application!!
+    \item Other applications (specifically Gene Golub). 
+\end{itemize}
+
+
+
+
+
+\newpage
+\section{Logs}
+
+Below are my daily logs for this week
+\newline
+
+
+
+\textbf{Monday}
+
+\begin{itemize}
+    \item Focused on teaching today (grading and prep). I need to figure out how to speed this up in the future.
+\end{itemize}
+
+\textbf{Tuesday}
+
+\begin{itemize}
+\item Tried the implementation of Nitsche's Biharmonic formulation with DWR. Realised quickly that the Nitsche formulation has extra residual terms not accounted for in our localisation. Back to square one :(
+\item Started reviewing some of the topics I had been learning over the past couple of weeks, in an effort to prep for my meeting with Patrick. 
+\end{itemize}
+
+\textbf{Wednesday}
+
+\begin{itemize}
+    \item Prepped and had my meeting with Patrick.
+    % \item Firedrake training, typing up meeting notes, plotting basis functions. 
+\end{itemize}
+
+\textbf{Thursday}
+\begin{itemize}
+    \item 
+\end{itemize}
+
+\textbf{Friday}
+
+\begin{itemize}
+    \item  
+\end{itemize}
+
+
+
+
+\newpage
+
+\section{Running Thesis Review List}
+
+I went back over my thesis and made note of topics/results I would like to review, knowledge gaps I would like to fill, and open questions we could explore. 
+
+\subsection{To  (i.e., to write some better notes on)}
+
+\begin{itemize}
+    \item Nick's text (just a nice review).
+    \item NLA (iterative) methods. How do we compute clusters with SLEPc? Ideal parameters for the inner problems?
+    \item Properties of nonnegative, self-adjoint operators.
+    \item Why closed operator is boundedly invertible iff it has a trivial nullspace and its range is the Hilbert space. Why the spectrum of a nonclosed operator is the whole plane. 
+    \item Closed operators, compact operators. 
+    \item Domain choices and density of Sobolev spaces in $L^2.$
+    \item Banach and Hilbert Adjoints. Also in finite dimensions.
+    \item Relating the spectrum of an operator to the spectrum of its adjoint. 
+    \item Equivalent pseudospectra definitions (proof). 
+    \item The discretise-then-solve approach. When can we get non-point spectra? Why do pitfalls occur? What are the eigenfunctions of non-eigenvalues? Is it really so bad or do you just need to be careful?
+    \item Other failure modes of discretise-then-solve.
+    \item Essential spectra (chapter 8 of Matt's text). Weyl sequences. 
+    \item History and physical context of the Maxwell problem.
+    \item The FEEC/Boffi explanation of spectral pollution for Maxwell. 
+    \item Injection moduli (finite vs. infinite) and norm dependence. Using norm of $\mathcal{H}$ instead of $D(A).$
+    \item Why distance is equal to gamma for normal operator. 
+    \item Inverse resolvent norm and injection moduli proof. 
+    \item Assumptions on phi and the convergence that follows. 
+    \item Dual and Anitdual. What does Riesz representation look like in each case?
+    \item FE version of Colbrook's folding.
+    \item The variational issues we found. Umberto's counterexamples. 
+    \item General DWR. Dual equation vs Adjoint eigenproblem.
+    \item \skyblue{FIX DWR ERROR ESTIMATE.}
+    \item Rognes and Logg localisation. Bubble and cones. 
+    \item Fredholm theory, Garding inequality, and point spectra results. 
+    \item Compact resolvents.
+    \item Least squares and orthogonal projections.
+    \item Avoiding $|z|^2$ for Maxwell. 
+    \item Why the contour?
+    \item Review Maxwell speedups.
+    \item Overall Code Review.
+    
+\end{itemize}
+
+
+\subsection{Running To Learn List}
+
+\begin{itemize}
+    \item The variational issues we found. Umberto's counterexamples. 
+        \item Why do we want a variational view? What operators are `variational'?
+    \item $M$ need not be invertible claim. Can we just restrict to the range? Have we already? Is this claim even true? What is $M$ for mixed Poisson? 
+    \item What is the real variational limitation? 
+    \item Why a sawtooth?
+    \item The details of the pseudospectra of the advection--diffusion example. 
+    \item Dirac Operators and Dirac folding.
+    
+\end{itemize}
+
+\subsection{Running To Explore List}
+
+\begin{itemize}
+    \item Multiplicity issue. Should we instead match the whole eigenspace? What is special about the first discrete eigenvalue in a cluster? Isn't it just deemed slightly smaller than the other numerically? If we do a basis matching, what do we compute the error estimate for? Do we compute an average estimate? 
+    \item Extending the localisation to account for advection-diffusion. Do we want a general extension to fourth-order operators or just derive a specific localisation for advection diffusion?
+    \item Should we just be doing p-refinement? 
+    \item DWR is not designed for general spectral values. Is DWR the right chouce? Can we extend it or should we do something different?
+    \item Correction vs. Enriched solve. Can we find examples where the correction substantially wins? Or will that not be the case?
+    \item Mike Giles' tighter bound and its impact on computations. How can I deem it better or worse? 
+    \item Can we get a tighter Lipschitz constant than one for gamma? I think one is an upper bound. Matt goes into this in an exercise of his book. 
+    \item Inner $O(h_K^2)$ criteria. Do we want to explore something else? Where else does something like this show up? 
+    \item Further investigate the deterioration as $\text{Re}(z)$ increases. 
+    \item Can we find any easy speedups like we did for Maxwell? 
+    \item What other examples and why? 
+    \item Can we do better than Dirac folding?
+    \item For a non-normal operator, can we relate its spectra to the analogous Dirac operator? 
+    \item How will we get around (or fix) the variational limitation of Colbrook's approach? 
+    \item To make running in parallel easier, I do not carry solutions as initial guesses for nearby $z$ values. It would be interesting to explore a `smart' way to do this. What $z$ values should be grouped together and why? 
+    \item Nick talks a bit about eliminating whole discs in the complex plane. Maybe there is something there for us to explore? 
+    \item Can we develop and/or apply preconditioners for eigenproblems? 
+\end{itemize}
+
+
+
+
+\end{document}

@@ -1,0 +1,532 @@
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=28mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[enumerate]{leftmargin=2em,itemsep=0.2em,topsep=0.2em}
+\setlist[itemize]{leftmargin=2em,itemsep=0.2em,topsep=0.2em}
+\allowdisplaybreaks[2]
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small A Note on Traces}
+\fancyhead[R]{\small 10 November 2026}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+% Colour Section Titles
+\usepackage[dvipsnames]{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% Current heading colour (stored as a name)
+\def\currentheadingcolor{Plum}
+
+% Section heading: Plum
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{Plum}}
+  {\thesection}{1em}{}
+
+% Subsection heading: Orchid
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{Orchid}}
+  {\thesubsection}{1em}{}
+
+% For highlightng text
+\newcommand{\skyblue}[1]{\textcolor{SkyBlue}{#1}}
+
+\newcommand{\Om}{\Omega}
+\newcommand{\Gam}{\Gamma}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Div}{\operatorname{div}}
+\newcommand{\Curl}{\operatorname{curl}}
+\newcommand{\grad}{\nabla}
+\newcommand{\Hdiv}{H(\Div;\Om)}
+\newcommand{\Hcurl}{H(\Curl;\Om)}
+\newcommand{\HDelta}{H(\Delta;\Om)}
+\newcommand{\dual}[2]{\left\langle #1,#2\right\rangle}
+
+\title{\textbf{A Note on Traces\\\large Weak Boundary Traces via Green's Identities}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-1.5em}
+
+\section{Disclaimer}
+These are notes written by chat (edited by me) based off of my handwritten notes. The relevant references are \cite{BoffiTrace} and \cite{BeeckTrace}.
+
+\section{Motivation}
+
+Functions in $H^1(\Om)$ are not necessarily continuous. Thus, it is not
+immediately clear what it means to evaluate $u\in H^1(\Om)$ on $\partial\Om$.
+
+Another subtlety is that $H^1$ functions are equivalence classes of functions
+that agree almost everywhere in $\Om$. However, the boundary of a Lipschitz
+domain has zero $d$-dimensional Lebesgue measure. We could therefore change
+the values of a representative on the boundary without changing its
+equivalence class.
+
+The solution is to introduce a \emph{trace operator}, which gives a
+well-defined meaning to boundary values in suitable boundary function spaces.
+
+\section{The trace of \texorpdfstring{$H^1(\Om)$}{H1} functions}
+
+When $\partial\Om$ is sufficiently regular (for example, when $\Om$ is a
+bounded Lipschitz domain), the classical restriction of smooth functions to
+the boundary is re-thought of using a continuous trace operator
+\[
+    \tr_0:H^1(\Om)\longrightarrow H^{1/2}(\partial\Om),
+    \qquad \tr_0 u = u|_{\partial\Om}
+    \quad\text{for smooth }u.
+\]
+The traces of functions in $H^1(\Om)$ form $H^{1/2}(\partial\Om)$, which
+is a proper dense subspace of $L^2(\partial\Om)$.
+In particular, $\tr_0$ is surjective and possesses a continuous lifting. (what does that mean?)
+% there exists a bounded linear operator
+% \[
+%     E:H^{1/2}(\partial\Om)\longrightarrow H^1(\Om)
+%     \qquad\text{such that}\qquad \tr_0(Eg)=g.
+% \]
+% We will use this lifting when showing that weak boundary traces are bounded.
+
+\section{The \texorpdfstring{$H(\Div;\Om)$}{H(div)} space}
+
+Recall that
+\[
+    \Hdiv
+    =\bigl\{\mathbf q\in L^2(\Om)^d:
+                   \Div\mathbf q\in L^2(\Om)\bigr\},
+\]
+with norm
+\[
+    \|\mathbf q\|_{H(\Div;\Om)}^2
+    =\|\mathbf q\|_{L^2(\Om)}^2
+     +\|\Div\mathbf q\|_{L^2(\Om)}^2.
+\]
+
+For $\mathbf q\in\Hdiv$, we define its \emph{normal trace} through Green's
+identity. In particular, for sufficiently smooth fields,
+\[
+    \int_{\partial\Om}(\mathbf q\cdot\boldsymbol\nu)v\dd s
+    =\int_\Om(\Div\mathbf q)v\dd x
+     +\int_\Om\mathbf q\cdot\grad v\dd x,
+\]
+where $\boldsymbol\nu$ is the outward unit normal. This motivates the
+variational definition
+\begin{equation}\label{eq:hdiv-trace}
+    \dual{\gamma_n\mathbf q}{\tr_0v}_{H^{-1/2},H^{1/2}}
+    :=\int_\Om(\Div\mathbf q)v\dd x
+      +\int_\Om\mathbf q\cdot\grad v\dd x,
+    \qquad v\in H^1(\Om).
+\end{equation}
+This expression is used to define the normal trace:
+\[
+    \gamma_n:\Hdiv\longrightarrow H^{-1/2}(\partial\Om),
+    \qquad \gamma_n\mathbf q=\mathbf q\cdot\boldsymbol\nu
+    \quad\text{for smooth }\mathbf q.
+\]
+which is well-defined, bounded, and surjective when $\Omega$ has a Lipschitz continuous boundary. (any conditions I have missed?)
+
+% The expression on the right depends only on $\tr_0v$: if $v\in H^1_0(\Om)$,
+% it vanishes by the definition of the distributional divergence and density
+% of $C_c^\infty(\Om)$ in $H^1_0(\Om)$. Together with the trace lifting and
+% Cauchy--Schwarz, this gives a well-defined bounded operator
+% \[
+%     \gamma_n:\Hdiv\longrightarrow H^{-1/2}(\partial\Om),
+%     \qquad \gamma_n\mathbf q=\mathbf q\cdot\boldsymbol\nu
+%     \quad\text{for smooth }\mathbf q.
+% \]
+% For bounded Lipschitz domains, this operator is also surjective.
+
+\section{The \texorpdfstring{$H(\Curl;\Om)$}{H(curl)} space}
+
+In three dimensions, recall that
+\[
+    \Hcurl
+    =\bigl\{\mathbf x\in (L^2(\Om))^3:
+                   \Curl\mathbf x\in (L^2(\Om))^3\bigr\},
+\]
+with norm
+\[
+    \|\mathbf x\|_{H(\Curl;\Om)}^2
+     =\|\mathbf x\|_{L^2(\Om)}^2
+      +\|\Curl\mathbf x\|_{L^2(\Om)}^2.
+\]
+
+To define the tangential trace, we start from integration by parts:
+\begin{equation}\label{eq:curl-green}
+    \int_\Om \mathbf x\cdot\Curl\boldsymbol\Phi\dd x
+    -\int_\Om (\Curl\mathbf x)\cdot\boldsymbol\Phi\dd x
+    =\int_{\partial\Om}
+        (\mathbf x\times\boldsymbol\nu)\cdot\boldsymbol\Phi\dd s.
+\end{equation}
+The terms on the left-hand-side are meaningful for $\mathbf x\in\Hcurl$ and
+$\boldsymbol\Phi\in H^1(\Om)^3$. We therefore use them to define the
+\emph{tangential trace} $\gamma_t\mathbf x$, by setting
+\begin{equation}\label{eq:hcurl-trace}
+    \dual{\gamma_t\mathbf x}{\tr_0\boldsymbol\Phi}
+    :=\int_\Om\mathbf x\cdot\Curl\boldsymbol\Phi\dd x
+      -\int_\Om(\Curl\mathbf x)\cdot\boldsymbol\Phi\dd x.
+\end{equation}
+As before, the right-hand side depends only on the boundary trace of the
+test function. Consequently,
+\[
+    \gamma_t:\Hcurl\longrightarrow (H^{-1/2}(\partial\Om))^3,
+    \qquad \gamma_t\mathbf x=(\mathbf x\times\boldsymbol\nu)|_{\partial \Om}
+       \quad\text{for smooth }\mathbf x,
+\]
+is well-defined and continuous.
+
+Surjectivity is more complicated. The tangential trace of an $H(\Curl; \Om)$
+field belongs to a more specific space than $(H^{-1/2}(\partial\Om))^3$.
+To see this, notice that
+\[
+    (\gamma_t\mathbf x)\cdot\boldsymbol\nu=0.
+\]
+Thus, the range of $\gamma_t$ lies in the tangent plane. However, $(H^{-1/2}(\partial\Om))^3$ has elements with nonzero normal components. 
+
+
+In particular, for smooth domains, the range of $\gamma_t$ is the following space:
+\[
+\begin{split}
+    H^{-1/2}(\Div_{\partial \Om};\partial \Om)
+    :=\bigl\{\mathbf q\in H^{-1/2}(\partial \Om)^3:\;&
+      \mathbf q\cdot\boldsymbol\nu=0,\\[-0.2em]
+     &\Div_{\partial \Om} \mathbf q\in H^{-1/2}(\partial \Om)\bigr\},
+\end{split}
+\]
+where $\Div_{\partial \Om}$ denotes \emph{surface divergence}. For example, on the
+flat surface $\partial \Om =\{(x_1,x_2,x_3):x_3=0\}$, a tangential field
+$\mathbf q=(q_1,q_2,0)$ has
+\[
+    \Div_{\partial \Om} \mathbf q
+     =\frac{\partial q_1}{\partial x_1}
+      +\frac{\partial q_2}{\partial x_2}.
+\]
+% With this range space, the tangential trace is surjective (for suitably
+% regular $\Gamma$).
+
+Before moving on, we note that care is required when the domain is polyhedral rather than smooth.
+On polyhedral domains, the normal jumps across edges. As a result, $q\cdot\boldsymbol\nu$ is not well-defined for $\mathbf q\in H^{-1/2}(\partial \Om)^3$ and our definition of $H^{-1/2}(\Div_{\partial \Om};\partial \Om)$ breaks down.
+
+% so the preceding simple description using
+% multiplication by a smooth normal field is no longer appropriate; the
+% correct trace spaces must account for the geometry of the boundary.
+% The tangential trace operator itself nevertheless remains well-defined.
+
+\section{Example: the Laplacian}
+
+Consider
+\[
+    -\Delta u=f\quad\text{in }\Om,
+    \qquad u\in H^1(\Om),\quad f\in L^2(\Om).
+\]
+For sufficiently smooth functions, integration by parts yields
+\begin{equation}\label{eq:poisson-green}
+    \int_\Om fv\dd x
+      =\int_\Om\grad u\cdot\grad v\dd x
+       -\int_{\partial\Om}(\grad u\cdot\boldsymbol\nu)v\dd s,
+    \qquad v\in H^1(\Om).
+\end{equation}
+Notice that since $\grad u\in L^2(\Om)^d$, its classical boundary restriction need not
+exist. However, the PDE supplies additional information we need to define a trace. In particular, since
+\[
+    \Div(\grad u)=\Delta u=-f\in L^2(\Om),
+\]
+we know that $\grad u\in\Hdiv.$ As a result,  we can use the normal trace from
+\eqref{eq:hdiv-trace} to define
+\begin{equation}\label{eq:poisson-normal}
+    \dual{\partial_\nu u}{\tr_0v}
+       :=\int_\Om\grad u\cdot\grad v\dd x
+         -\int_\Om fv\dd x
+       =\int_\Om\grad u\cdot\grad v\dd x
+         +\int_\Om(\Delta u)v\dd x,
+    \qquad v\in H^1(\Om).
+\end{equation}
+Here $\partial_\nu u=\gamma_n(\grad u)$.
+
+\subsection*{Well-defined, Uniqueness, and Bounded}
+
+We first show that the right-hand side of \eqref{eq:poisson-normal} depends
+only on $\tr_0v$. Suppose $v_1,v_2\in H^1(\Om)$ satisfy
+$\tr_0v_1=\tr_0v_2$. Then $w=v_1-v_2\in H^1_0(\Om)$.
+
+Since $H^1_0(\Om)$ is the closure of $C_c^\infty(\Om)$ in the $H^1(\Om)$ norm, the
+following identity (for the distributional Laplacian), 
+\[
+    \int_\Om(\Delta u)\varphi\dd x
+        =-\int_\Om\grad u\cdot\grad\varphi\dd x,
+    \qquad \varphi\in C_c^\infty(\Om),
+\]
+extends to every $w\in H^1_0(\Om)$. Therefore,
+\[
+    \int_\Om\grad u\cdot\grad w\dd x
+       +\int_\Om(\Delta u)w\dd x=0.
+\]
+It follows that the two choices $v_1$ and $v_2$ give the same value in
+\eqref{eq:poisson-normal}.
+
+Moreover, $\tr_0:H^1(\Om)\to H^{1/2}(\partial\Om)$ is surjective. Hence,
+for every $g\in H^{1/2}(\partial\Om)$, we may choose $v\in H^1(\Om)$
+with $\tr_0v=g$ and set
+\[
+    \dual{\partial_\nu u}{g}
+      =\int_\Om\grad u\cdot\grad v\dd x
+        +\int_\Om(\Delta u)v\dd x.
+\]
+As a result, the trace operator $\partial_\nu u$ is well-defined and unique. Furthermore, $\partial_\nu u$ is bounded, making it an element of $H^{-1/2}(\partial\Om).$
+
+% \subsection*{Boundedness}
+
+% By Cauchy--Schwarz,
+% \[
+%     |\dual{\partial_\nu u}{\tr_0v}|
+%       \leq \bigl(\|\grad u\|_{L^2(\Om)}
+%                   +\|\Delta u\|_{L^2(\Om)}\bigr)
+%               \|v\|_{H^1(\Om)}.
+% \]
+% To obtain a bound in the boundary norm, take $v=Eg$, where $E$ is the
+% continuous lifting of the trace. Then
+% \[
+%     |\dual{\partial_\nu u}{g}|
+%       \leq C\bigl(\|\grad u\|_{L^2(\Om)}
+%                  +\|\Delta u\|_{L^2(\Om)}\bigr)
+%               \|g\|_{H^{1/2}(\partial\Om)}.
+% \]
+% Consequently,
+% \[
+%     \partial_\nu u\in H^{-1/2}(\partial\Om).
+% \]
+
+\newpage
+
+\section{A biharmonic-type problem}
+
+We now apply the same idea to a fourth-order problem, for which there are
+two boundary traces to define. The starting point is Green's second identity.
+
+\subsection{Model problem and boundary quantities}
+
+Let $\Om\subset\mathbb R^d$, with $d\in\{2,3\}$, be a bounded convex
+domain with smooth boundary, and let $\boldsymbol\nu$ denote its outward
+unit normal. Consider the model equation
+\begin{equation}\label{eq:biharmonic-model}
+    \alpha\Delta^2u
+      +\beta\,\Div\!\left(\grad\bigl(\mathbf n^{\mathsf T}
+                   (\nabla^2u)\mathbf n\bigr)\right)
+      -\Delta u-\kappa^2u=f
+    \qquad\text{in }\Om,
+\end{equation}
+with the (unspecified) boundary condition $\mathcal Bu=0$ on $\partial\Om$.
+Here $f\in L^2(\Om)$, $\alpha,\beta\geq0$ are constant coefficients,
+$\nabla^2u$ denotes the Hessian of $u$, and $\mathbf n$ is a piecewise
+constant unit vector field describing the local average orientation of
+molecules in the fluid. In particular, $\mathbf n$ is distinct from the
+outward boundary normal $\boldsymbol\nu$.
+
+We are interested in the boundary quantities
+\begin{align}
+    T_0u&:=\alpha\Delta u
+                 +\beta\,\mathbf n^{\mathsf T}(\nabla^2u)\mathbf n,
+                    \label{eq:T0formal}\\
+    T_1u&:=\alpha\grad(\Delta u)\cdot\boldsymbol\nu
+       +\beta\grad\!\left(\mathbf n^{\mathsf T}
+                     (\nabla^2u)\mathbf n\right)\cdot\boldsymbol\nu
+       =\partial_\nu(T_0u).
+                    \label{eq:T1formal}
+\end{align}
+% where the expressions in \eqref{eq:T1formal} are initially understood
+% formally for sufficiently smooth functions.
+
+As in the Poisson example, the PDE yields additional regularity. Assuming
+$u\in H^2(\Om),$ \eqref{eq:biharmonic-model} gives
+\[
+    \Delta(T_0u)
+      =\alpha\Delta^2u
+       +\beta\Delta\!\left(\mathbf n^{\mathsf T}
+                          (\nabla^2u)\mathbf n\right)
+      =f+\Delta u+\kappa^2u\in L^2(\Om).
+\]
+Since $u\in H^2(\Om)$ also implies $T_0u\in L^2(\Om)$, we find that
+\[
+    T_0u\in\HDelta
+       :=\bigl\{q\in L^2(\Om):\Delta q\in L^2(\Om)\bigr\}.
+\]
+This is just enough regularity to employ Green's second identity and to thus define the needed boundary traces. In particular, for sufficiently smooth $q$ and $w$, Green's second identity is as follows:
+\begin{equation}\label{eq:greens-second}
+    \int_\Om(\Delta q)w\dd x
+      =\int_\Om q\,\Delta w\dd x
+       +\int_{\partial\Om}(\partial_\nu q)w\dd s
+       -\int_{\partial\Om}q\,\partial_\nu w\dd s.
+\end{equation}
+Taking $q=T_0u$, the two boundary integrals contain $T_1u=\partial_\nu(T_0u)$
+and $T_0u$. As before, we use the well-define volume integrals in this identity to define the not-so-well-defined
+boundary traces. 
+
+\subsection{The trace \texorpdfstring{$T_0u\in H^{-1/2}(\partial\Om)$}{T0}}
+
+Starting from \eqref{eq:greens-second}, take $w\in H^2(\Om)$ with
+$\tr_0w=0$. This removes the boundary term involving $T_1u$ and motivates
+\begin{equation}\label{eq:T0weak}
+    \dual{T_0u}{\tr_\nu w}_{H^{-1/2},H^{1/2}}
+       :=\int_\Om(T_0u)\Delta w\dd x
+         -\int_\Om\bigl(\Delta(T_0u)\bigr)w\dd x,
+    % \quad
+    % \begin{gathered}
+    %    w\in H^2(\Om),\\[-0.2em]
+    %    \tr_0w=0,
+    % \end{gathered}
+\end{equation}
+for every $w\in H^2(\Om)$ such that $\tr_0w=0.$
+Here, $\tr_\nu w=\partial_\nu w|_{\partial\Om}$ is the standard normal-derivative trace of a $H^2$ function.
+
+\newpage
+
+
+\textbf{Well-defined, Unique, and Bounded}
+
+
+Set
+\[
+    F(w):=\int_\Om(T_0u)\Delta w\dd x
+          -\int_\Om\bigl(\Delta(T_0u)\bigr)w\dd x.
+\]
+Suppose $v_1,v_2\in H^2(\Om)$ satisfy
+\[
+    \tr_0v_1=\tr_0v_2=0,
+    \qquad \tr_\nu v_1=\tr_\nu v_2.
+\]
+Then $w=v_1-v_2$ has both traces equal to zero. Under the usual smoothness
+assumptions on $\partial\Om$,
+\[
+    H^2_0(\Om)
+       =\{w\in H^2(\Om):\tr_0w=\tr_\nu w=0\},
+\]
+so $w\in H^2_0(\Om)$. For every $\varphi\in C_c^\infty(\Om)$, the
+distributional Laplacian satisfies
+\[
+    \int_\Om(T_0u)\Delta\varphi\dd x
+      =\int_\Om\bigl(\Delta(T_0u)\bigr)\varphi\dd x.
+\]
+Both sides are continuous in the $H^2$ norm, and
+$H^2_0(\Om)=\overline{C_c^\infty(\Om)}^{\,H^2(\Om)}$.
+Thus we can extend the identity to $w\in H^2_0(\Om)$, giving $F(w)=0$.
+It follows that $F(v_1)=F(v_2)$, so the right-hand side of
+\eqref{eq:T0weak} depends only on $\tr_\nu w$. 
+
+On a smooth domain, the restricted normal trace
+\[
+    \tr_\nu:\{w\in H^2(\Om):\tr_0w=0\}
+                       \longrightarrow H^{1/2}(\partial\Om)
+\]
+is surjective. Thus \eqref{eq:T0weak} defines a unique functional on
+$H^{1/2}(\partial\Om)$. Furthermore, using Cauchy-Schwarz, $T_0u \in H^{-1/2}(\partial\Om).$ 
+
+% \emph{Boundedness.}
+% Cauchy--Schwarz gives
+% \[
+%     |F(w)|\leq C\bigl(\|T_0u\|_{L^2(\Om)}
+%        +\|\Delta(T_0u)\|_{L^2(\Om)}\bigr)\|w\|_{H^2(\Om)}.
+% \]
+% Using a bounded lifting of the restricted normal trace, we obtain
+% \[
+%     |\dual{T_0u}{g}|
+%       \leq C\|T_0u\|_{H(\Delta;\Om)}
+%                  \|g\|_{H^{1/2}(\partial\Om)}.
+% \]
+% Hence
+% \[
+%     \boxed{T_0u\in H^{-1/2}(\partial\Om).}
+% \]
+% Strictly speaking, the notation on the left denotes the weak boundary
+% trace of the interior quantity $T_0u$.
+
+\subsection{The trace \texorpdfstring{$T_1u\in H^{-3/2}(\partial\Om)$}{T1}}
+
+Now reconsider \eqref{eq:greens-second}, but impose
+$\tr_\nu w=0$. This removes the boundary term containing $T_0u$ and
+motivates
+\begin{equation}\label{eq:T1weak}
+    \dual{T_1u}{\tr_0w}_{H^{-3/2},H^{3/2}}
+      :=\int_\Om\bigl(\Delta(T_0u)\bigr)w\dd x
+        -\int_\Om(T_0u)\Delta w\dd x,
+    % \quad
+    % \begin{gathered}
+    %    w\in H^2(\Om),\\[-0.2em]
+    %    \tr_\nu w=0.
+    % \end{gathered}
+\end{equation}
+for all $w\in H^2(\Om)$ such that $\tr_\nu w=0.$
+The `well-defined' arguments are analogous to the $T_0u$ case. That is, the right hand side of \eqref{eq:T1weak} depends only on $w$ through $tr_0w.$ Furthermore,
+\[
+    \tr_0:\{w\in H^2(\Om):\tr_\nu w=0\}
+                     \longrightarrow H^{3/2}(\partial\Om)
+\]
+is surjective. Thus, $T_1u$ is well-defined and unique. Finally, Cauchy-Schwarz tells us that $T_1u\in H^{-3/2}(\partial\Om).$
+% \[
+%     |\dual{T_1u}{g}|
+%       \leq C\|T_0u\|_{H(\Delta;\Om)}
+%                  \|g\|_{H^{3/2}(\partial\Om)}.
+% \]
+% Consequently,
+% \[
+%     \boxed{T_1u\in H^{-3/2}(\partial\Om).}
+% \]
+% Again, $T_1u$ denotes the weak boundary trace corresponding to the
+% formal normal derivative $\partial_\nu(T_0u)$.
+
+\newpage
+
+\section{Some Conclusions / Generalisations}
+
+The common approach is to use a Green's identity to isolate a not-so-well-defined boundary
+term. In general, we start with 
+\[
+    a(u,v)=(Lu,v)_\Om+\dual{Bu}{\tr v},
+\]
+which motivates
+\begin{equation}
+    \dual{Bu}{\tr v}:=a(u,v)-(Lu,v)_\Om.
+\end{equation}
+Defining the trace then seems to follow three main steps:
+\begin{enumerate}
+    \item \textbf{Dependence on the boundary trace.}
+          Show that the volume expression depends on $v$ only through
+          $\tr v.$
+    \item \textbf{Uniqueness.}
+          Use surjectivity of the relevant test-function trace to
+          obtain a unique boundary functional $Bu$.
+    \item \textbf{Boundedness.}
+          Apply Cauchy--Schwarz (and what else?) to show that
+          $Bu$ is a dual element.
+\end{enumerate}
+
+For example, if $u\in H^1(\Om)$ and $\Delta u\in L^2(\Om)$, Green's
+identity defines
+\[
+    \dual{\partial_\nu u}{\tr_0v}
+     :=\int_\Om\grad u\cdot\grad v\dd x
+        +\int_\Om(\Delta u)v\dd x.
+\]
+The distributional Laplacian establishes well-definedness; surjectivity
+of $\tr_0$ establishes uniqueness; and Cauchy--Schwarz establishes $\partial_\nu u\in H^{-1/2}(\partial\Om)$.
+Equivalently, because $\grad u\in H(\Div;\Om)$, we can use the
+$H(\Div; \Om)$ normal trace of $\grad u$:
+\[
+    \partial_\nu u=\gamma_n(\grad u).
+\]
+
+\bibliography{Trace}
+\bibliographystyle{plain}
+\end{document}
