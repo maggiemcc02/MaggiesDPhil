@@ -139,6 +139,73 @@
 
 \maketitle
 
+\section{Meeting with Umberto November 23}
+
+\subsection{What have I been up to?}
+
+\begin{itemize}
+    \item I spent a week learning about the Nitsche formulations. I implemented these as well. However, it seems like they are of little use to us after all because the symmetry terms do not fit our generic representation. 
+    % \item 
+    % \item I attended the Firedrake course Wednesday. Maybe not the most new and exciting, but a nice refresher, and I did some other work during bits of it. 
+    \item Looked at the basis functions Pablo uses for his localisation. I could really see the broken vs. non-broken bases. Also, I could see that the integral variant creates a different basis, and thus a different extension, then the standard nodal variant. I might still talk to Umberto about this. It seems like the main benefit is the fact that the integral variant is hierarchical. 
+    % \item Had to complete my interview training, which took longer than expected (of course!).
+    \item Work(ed/ing) on a first implementation of the full $C^1$ localisation within Pablo's (old) \texttt{GoalAdaptiveNonlinearVariationalSolver}. In particular, 
+    \begin{itemize}
+        \item I first figured out and tested the strong enforcement of boundary conditions for the 1D biharmonic problem (Hermite elements).
+        \item I then looked at each local problem separately, using a manufactured solutions approach. Something interesting came up here .... 
+        \item I then altered Pablo's old code with these three local problems (along with some other needed modifications). 
+        \item I tested the resulting solver on a manufactured 1D biharmonic problem. I compared the results with the refinement scheme and with uniform refinement. These results seem promising? (take a look)
+            \end{itemize}
+    \item Patrick did not seem convinced that everything was working as expected, at first, but then for a smoother solution we saw better results, and for Poisson we saw similar results. What does Umberto think?
+    \item There is this discrepency between residual choices. It seems like it may be some sort of cancellation error. I have tried some preliminary tests.
+    \item The conditioning of these fourth-order problems is problematic. Patrick suggested maybe trying quad precision for fun (lol). Pablo suggested trying \begin{lstlisting}
+return Function(P1, dtype=PETSc.RealType).interpolate(CellSize(self), access=MIN)
+\end{lstlisting}
+in place of the return statement in the following method:
+\begin{lstlisting}
+def cell_sizes(self):
+    """A :class:`firedrake.function.Function` in the
+    :math:`P^1` space containing the local mesh size.
+
+    This is computed by the :math:`L^2` projection
+    of the local mesh element size.
+    """
+    from firedrake.ufl_expr import CellSize
+    from firedrake.functionspace import FunctionSpace
+    from firedrake.projection import project
+
+    P1 = FunctionSpace(self, "Lagrange", 1)
+    return project(CellSize(self), P1)
+\end{lstlisting}
+\item Chat dug out a quad precision MUMPS in Fortran? Not sure what I want to do with that. 
+\end{itemize}
+
+\subsection{Rough Plan}
+
+\begin{itemize}
+    \item I need to understand the folded BC's better!
+    \item Diagnose the residual discrepency. (Codex)
+    \item Explore using quad precision. 
+    \item Update all my Firedrake installations and adapt all of this to Pablo's new adaptive functionality. (understand the differences and adjust accordingly) (Codex)
+    \item Add this $C^1$ localisation into an eigensolver and transition back to the folded eigenproblem. 
+    \item Add solver error into my eigenproblem code. 
+    \item Finally check Mike's suggestion.
+    \item Work through Umberto's counterexamples myself. 
+    \item Continue working on paper drafts. 
+\end{itemize}
+
+\subsection{Questions for Umberto}
+
+\begin{itemize}
+    \item His thoughts on the integral variant?
+    \item His thoughts on the localisation results?
+    \item His thoughts on the potential cancellation issue? 
+    \item His thoughts on conditioning? 
+    \item Thoughts on a minisymposium?
+\end{itemize}
+
+\newpage
+
 \section{Meeting with Patrick November 18}
 
 \subsection{Meeting Notes}
@@ -728,21 +795,31 @@ Below are my daily logs for this week
 \textbf{Wednesday}
 
 \begin{itemize}
-    \item 
+    \item Finidhed up some code from yesterday.
+    \item Prepped for Patrick meeting. 
+    \item Patrick meeting.
 \end{itemize}
 
 \textbf{Thursday}
 \begin{itemize}
-    \item 
+    \item Tried to diagnose residual discrepency. 
+    \item Explored quad precision options. Chatted with Pablo.
 \end{itemize}
 
 \textbf{Friday}
 
 \begin{itemize}
-    \item  
+    \item  Graded problem sheets.
+    \item Reading group. 
+    \item Two college related meetings
 \end{itemize}
 
 
+\textbf{Sunday}
+
+\begin{itemize}
+    \item Finished some grading and prepped for next CompMaths session. 
+\end{itemize}
 
 
 \newpage

@@ -466,6 +466,88 @@ In satisfying the two assumptions, this formulation is well-posed and quasi-opti
     \]
 \end{itemize}
 
+\section{Nitsche's Formulation is of No Use for our $C^1$ Localisation}
+
+
+Our proposed local error representation is
+\begin{equation}
+  r_T(v)
+  = (R_T,v)_T
+  + (R_{\partial T}^{1},\partial_n v)_{\partial T}
+  + (R_{\partial T}^{0},v)_{\partial T}.
+  \label{eq:nitsche-generic-residual}
+\end{equation}
+Here, $n$ is the outward unit normal to $T$, and $(\cdot,\cdot)_D$
+denotes the $L^2$ inner product over $D$. 
+
+% The calculations below are
+% understood cellwise for sufficiently smooth functions.
+
+For the biharmonic problem with homogeneous clamped boundary conditions,
+before adding any Nitsche terms, we consider
+\begin{align}
+  r_T(v)
+  &= (f,v)_T - (\Delta u_h,\Delta v)_T
+  \notag\\
+  &= (f,v)_T
+     - \bigl[-(\nabla\Delta u_h,\nabla v)_T
+       + (\Delta u_h,\partial_n v)_{\partial T}\bigr]
+  \notag\\
+  &= (f,v)_T
+     - \bigl[(\Delta^2 u_h,v)_T
+       - (\partial_n\Delta u_h,v)_{\partial T}
+       + (\Delta u_h,\partial_n v)_{\partial T}\bigr]
+  \notag\\
+  &= (f-\Delta^2 u_h,v)_T
+     + (\partial_n\Delta u_h,v)_{\partial T}
+     - (\Delta u_h,\partial_n v)_{\partial T}.
+  \label{eq:nitsche-unmodified-residual}
+\end{align}
+This fits our proposed representation exactly, with
+\begin{equation}
+  R_T = f-\Delta^2 u_h,
+  \qquad
+  R_{\partial T}^{1} = -\Delta u_h,
+  \qquad
+  R_{\partial T}^{0} = \partial_n\Delta u_h.
+  \label{eq:nitsche-residual-coefficients}
+\end{equation}
+
+Now consider the additional Nitsche terms. The consistency terms are
+\begin{equation}
+  C_T(u_h,v)
+  = (\partial_n\Delta u_h,v)_{\partial T}
+    - (\Delta u_h,\partial_n v)_{\partial T}.
+  \label{eq:nitsche-consistency-terms}
+\end{equation}
+These are subtracted when
+included in the residual. Thus, they cancel the two boundary terms in
+\eqref{eq:nitsche-unmodified-residual}.
+
+The penalty terms also fit the proposed representation: they pair a
+quantity depending on $u_h$ with either $v$ or $\partial_n v$ on the
+boundary. Their contributions can therefore be absorbed into
+$R_{\partial T}^{0}$ and $R_{\partial T}^{1}$.
+
+The difficulty is the symmetry terms,
+\begin{equation}
+  S_T(u_h,v)
+  = (u_h,\partial_n\Delta v)_{\partial T}
+    - (\partial_n u_h,\Delta v)_{\partial T}.
+  \label{eq:nitsche-symmetry-terms}
+\end{equation}
+These involve $\Delta v$ and $\partial_n\Delta v$, whereas
+\eqref{eq:nitsche-generic-residual} only allows boundary pairings with
+$v$ and $\partial_n v$. Thus, although the consistency and penalty
+terms fit the representation, the symmetry terms do not fit it directly.
+
+With this observation, we for now abandon the use of the Nitsche formulation and impose boundary conditions strongly for our 1D Biharmonic test problems. However, we keep the following question in the back of our minds:
+
+\medskip
+\noindent\emph{Can we use further integration by parts to rewrite the
+symmetry terms in terms of $v$ and $\partial_n v$, thereny making Nitsche's formulation compatible with our $C^1$ localisation?}
+
+
 
 \bibliography{Nitsche}
 \bibliographystyle{plain}
