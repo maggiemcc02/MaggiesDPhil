@@ -144,7 +144,44 @@
 \subsection{Meeting Notes}
 
 \begin{itemize}
-    \item
+    \item Umberto walked me through why the advection operator is neither self-adjoint not normal. The non-normality depends on the boundary condition that follows from $(A-zI)u \in D(A^*).$ To see this discrepancy, Umberto suggested computing the pseudospectra of $(A-zM)^*M^{-1}(A-zM)$ in two cases: 
+    \begin{itemize}
+        \item When the $M$ in $A-zM$ has a boundary condition but the $M$ in $M^{-1}$ does not. (our case) You should see non-normality. 
+        \item When both $M$'s have boundary conditions. You should see normality. 
+    \end{itemize}
+    \item I need to work through this all myself. It has been a while since I thought about our `functional analytic view' of Matt's algorithm. In particular, I need to review the thesis discussion, Umberto's paper on normal preconditioning, and the slides he sent me. I will return to this discussion after I implement the new eigensolver. 
+    \item Although it is fine for me to strongly impose boundary conditions for Hermite in 1D, I will need to decide on a 2D analogue so that we can do a 2D L-shaped example. Umberto suggested HCT-red (+ imposing point evaluation boundary conditions) or Argyris (if we can just impose point evaluation boundary conditions). 
+    \item We discussed using quad precision for conditioning. Umberto and I seemed to agree that this would take me a while to get working and may not be worth it (the MUMPS solver I found seems to be in Fortran). He suggested a truncated SVD (Moiola) or exporting the matrices to mpmath as a quick (inefficient) test. 
+    \item We discussed options for avoiding $C^1$ elements. Umberto seems to have two ideas in mind:
+    \begin{itemize}
+        \item Use a Trefftz method to get a low conforming element that is closed in the graph space. These methods pick basis functions that locally solve the problem, giving us the `closed in the graph norm' (core) condition we need. 
+        \item Use a mixed formulation of the form 
+        \begin{equation}
+            \begin{pmatrix}
+        M & A-zM \\
+        (A-zM)^T & 0
+        \end{pmatrix}
+        \begin{pmatrix}
+        \Psi \\
+        u
+        \end{pmatrix}
+        =
+        \lambda
+        \begin{pmatrix}
+        0 & 0 \\
+        0 & M
+        \end{pmatrix}
+        \begin{pmatrix}
+        \Psi \\
+        u
+        \end{pmatrix}.
+        \end{equation}
+        [Note to self: the discretisation of $A$ is the transpose of the discretisation of $A^*,$ can you see why? Hint: compare $B_{ij} = ((A-zM)^* \varphi_i, \varphi_j) = (\varphi_i, (A-zM) \varphi_j)$ and $C_{ij} = ((A-zM)\varphi_i, \varphi_j)$]
+        
+        The advantage is that we do not need $C^1$ elements. The disadvantage (depending on who you ask) is that inf-sup conditions are not enough for this problem, so we need to use Fortin theory? (I need to read into this conclusion)
+        
+        Also, Umberto thinks the spectra and pseudospectra will map as needed. I will work through that theory when the time comes. 
+    \end{itemize}
 \end{itemize}
 
 \subsection{What have I been up to?}
@@ -192,6 +229,7 @@ def cell_sizes(self):
     \item I need to understand the folded BC's better!
     \item Diagnose the residual discrepency. (Codex)
     \item Explore using quad precision. 
+    \item Read into the different solver parameters (MUMPS, pc\_types (SVD), etc).
     \item Update all my Firedrake installations and adapt all of this to Pablo's new adaptive functionality. (understand the differences and adjust accordingly) (Codex)
     \item Add this $C^1$ localisation into an eigensolver and transition back to the folded eigenproblem. 
     \item Add solver error into my eigenproblem code. 
@@ -787,30 +825,42 @@ Below are my daily logs for this week
 \textbf{Monday}
 
 \begin{itemize}
-    \item 
+    \item  Meeting with Umberto (notes above). 
+    \item Lecture.
+    \item Prep for teaching, write up some meeting notes.
+    \item Teach.
 \end{itemize}
 
 \textbf{Tuesday}
 
 \begin{itemize}
-\item 
+\item Locate and review Pablo's most recent adaptive PR (with help of chat). Analysed the differences between the PR and the adaptive code I was using. Noted †he changes I want to make and the ways I can make them.
+\item Updated the Firedrake I am using on the syndrome computer, Branched off of Pablo's PR, tested Hermite elements (had to change the FIAT being used to get degree 4 Hermite), tested a basic biharmonic example. Chat made these tests for me. 
+
+\item Patrick got Claude to implement quad precision. At the end of the day, I transferred (with help of Chat) my biharmonic Colab tests to .py files for him to run using his quad Firedrake.
+
+\item I want to ask Patrick more about his AI expectations. In theory, I could have also done this using Chat, but I am reluctant to let it do something in full like that. Rather, I like to work through the steps with AI so that I can at least feel like I have an idea of what is going on. 
 \end{itemize}
 
 \textbf{Wednesday}
 
 \begin{itemize}
-    \item 
+    \item Worked on adding some biharmonic $C^1$ example to the Firedrake branch, based on the structure of Pablo's `adapt.py` code.  
 \end{itemize}
 
 \textbf{Thursday}
 \begin{itemize}
-    \item
+    \item Had to transition to wolverine (different, more powerful computer). So I had to do all these install again (woo hoo! *sarcastically*)
+    \item Got the biharmonic tests running. Got simular results to my Colab tests. I may need to dive in here tho because they are not identical. But maybe this is to be expected (different machine, solver, etc). 
+    \item Met with Pablo to chat about the eigensolver. Seems like I will for now need to hard-code the adaptive loop in my class, because Pablo's PR has it in the linear and nonlinear variational solvers, not in the eigensolver. Maybe this is a nice SLEPc addition we can make in the future!  
+    \item Next goal, then, is to update my eigensolver from the summer to account for Firedrake changes.
 \end{itemize}
 
 \textbf{Friday}
 
 \begin{itemize}
-    \item  
+    \item Worked on the eigensolver. Taking me a while and not done yet. Will pick up on Monday. (grading over the weekend)
+    \item Patrick ran my example with quad precision (by Claude). However, FIAT remained double precision. As a result, we still get the ill-conditioning plateau, just at an error of roughly $10^{-8}$ instead of $10^{-7}.$ I will ask Patrick/Umberto to explain what exactly was quad vs. double. Umberto said this is a common fourth-order-problem issue, and working on a mixed formulation in the future will help. 
 \end{itemize}
 
 
